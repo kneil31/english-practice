@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="referrer" content="no-referrer">
+    <title>English Practice — Ram's Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #191919;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout { display: flex; height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: #202020;
+            border-right: 1px solid #2d2d2d;
+            padding: 20px 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-brand {
+            padding: 8px 12px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #9ca3af;
+            letter-spacing: -0.3px;
+        }
+        .sidebar-brand span { color: #10b981; }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            margin: 1px 0;
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: all 0.15s;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background: #2d2d2d; color: #e0e0e0; }
+        .sidebar-link.active { background: #2d2d2d; color: #ffffff; }
+        .sidebar-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .sidebar-section-label {
+            padding: 12px 12px 4px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #525252;
+            letter-spacing: 1px;
+        }
+        .sidebar-divider {
+            height: 1px;
+            background: #2d2d2d;
+            margin: 8px 12px;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px 12px 8px;
+            font-size: 11px;
+            color: #525252;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 60px;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            max-width: 780px;
+            animation: fadeIn 0.2s;
+        }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .page-meta {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 32px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: #202020;
+            border: 1px solid #2d2d2d;
+            border-radius: 10px;
+            padding: 16px 20px;
+            min-width: 100px;
+            flex: 1;
+            text-align: center;
+        }
+        .stat-card.accent {
+            border-color: #10b981;
+            background: #0d2818;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .stat-max {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Score Chart */
+        .score-chart {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px 0;
+        }
+        .score-dot {
+            cursor: pointer;
+            transition: r 0.15s;
+        }
+        .score-dot:hover {
+            r: 8;
+        }
+
+        /* Tooltip */
+        .chart-tooltip {
+            position: fixed;
+            background: #2d2d2d;
+            border: 1px solid #4b5563;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #e0e0e0;
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+            white-space: pre-line;
+            max-width: 300px;
+        }
+
+        /* Weakness Cards */
+        .weakness-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .weakness-card {
+            background: #202020;
+            border: 1px solid #2d2d2d;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        .weakness-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .weakness-icon { font-size: 16px; }
+        .weakness-name {
+            font-weight: 600;
+            color: #e0e0e0;
+            font-size: 14px;
+            flex: 1;
+        }
+        .weakness-status {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .status-active { background: #3b1010; color: #ef4444; }
+        .status-improving { background: #2d2006; color: #f59e0b; }
+        .status-resolved { background: #0d2818; color: #10b981; }
+        .weakness-desc {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+        /* Drill History */
+        .drill-item {
+            background: #202020;
+            border: 1px solid #2d2d2d;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        .drill-item:hover { border-color: #4b5563; }
+        .drill-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+        }
+        .drill-color {
+            width: 4px;
+            height: 36px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .drill-info { flex: 1; }
+        .drill-topic {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        .drill-meta {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        .drill-chevron {
+            color: #525252;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .drill-item.expanded .drill-chevron { transform: rotate(180deg); }
+        .drill-details {
+            display: none;
+            padding: 0 20px 20px 36px;
+        }
+        .drill-item.expanded .drill-details { display: block; }
+        .drill-improvement {
+            font-size: 13px;
+            color: #10b981;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .drill-key-msg {
+            font-size: 13px;
+            color: #a78bfa;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        /* Round Bars */
+        .drill-rounds { margin-bottom: 16px; }
+        .round-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .round-label {
+            font-size: 11px;
+            color: #6b7280;
+            width: 60px;
+            flex-shrink: 0;
+        }
+        .round-bar-track {
+            flex: 1;
+            height: 8px;
+            background: #2d2d2d;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .round-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .round-score {
+            font-size: 11px;
+            color: #9ca3af;
+            width: 40px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* Corrections */
+        .drill-corrections, .drill-remaining {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .drill-corrections strong { color: #10b981; }
+        .drill-remaining strong { color: #f59e0b; }
+        .drill-corrections ul, .drill-remaining ul {
+            margin: 6px 0 0 20px;
+        }
+        .drill-corrections li, .drill-remaining li {
+            margin-bottom: 4px;
+        }
+
+        /* Curriculum */
+        .fs-progress { margin-bottom: 24px; }
+        .fs-bar-container {
+            height: 12px;
+            background: #2d2d2d;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .fs-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 6px;
+            transition: width 0.5s;
+        }
+        .fs-bar-label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+        .module-card {
+            background: #202020;
+            border: 1px solid #2d2d2d;
+            border-radius: 10px;
+            padding: 18px;
+        }
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .module-num {
+            font-size: 11px;
+            font-weight: 700;
+            color: #525252;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .module-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .module-badge.drillable { background: #0d2818; color: #10b981; }
+        .module-badge.coach-only { background: #1e1b4b; color: #818cf8; }
+        .module-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+        }
+        .module-items {
+            font-size: 12px;
+            color: #9ca3af;
+            line-height: 1.7;
+            margin-left: 16px;
+        }
+
+        /* Oxford Scores */
+        .oxford-section {
+            margin-bottom: 32px;
+        }
+        .oxford-section h3 {
+            font-size: 16px;
+            color: #e0e0e0;
+            margin-bottom: 12px;
+        }
+        .oxford-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .oxford-table th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 2px solid #2d2d2d;
+            color: #6b7280;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .oxford-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #2d2d2d;
+            color: #e0e0e0;
+        }
+        .cefr-badge {
+            background: #1e3a5f;
+            color: #60a5fa;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Weekly */
+        .weekly-heading {
+            font-size: 16px;
+            color: #e0e0e0;
+            margin: 20px 0 10px;
+        }
+        .weekly-subheading {
+            font-size: 14px;
+            color: #9ca3af;
+            margin: 14px 0 8px;
+        }
+        .weekly-item {
+            font-size: 13px;
+            color: #9ca3af;
+            padding: 4px 0;
+            line-height: 1.6;
+        }
+        .weekly-item strong { color: #e0e0e0; }
+        .weekly-note {
+            font-size: 13px;
+            color: #e0e0e0;
+            margin: 8px 0;
+        }
+        .weekly-text {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin: 4px 0;
+        }
+        .weekly-table-row {
+            font-size: 12px;
+            color: #9ca3af;
+            padding: 6px 12px;
+            background: #202020;
+            border-radius: 4px;
+            margin: 2px 0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #525252;
+            font-size: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .content { padding: 20px; }
+            .stats-bar { flex-direction: column; }
+            .stat-card { min-width: auto; }
+            .module-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 24px; }
+        }
+
+        /* Mobile nav toggle */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #202020;
+            padding: 12px 16px;
+            z-index: 50;
+            border-bottom: 1px solid #2d2d2d;
+        }
+        .mobile-nav button {
+            background: none;
+            border: 1px solid #4b5563;
+            color: #e0e0e0;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+        .mobile-nav button.active {
+            background: #2d2d2d;
+            border-color: #10b981;
+        }
+        @media (max-width: 768px) {
+            .mobile-nav { display: flex; gap: 4px; overflow-x: auto; }
+            .content { padding-top: 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-tooltip" id="tooltip"></div>
+
+    <div class="mobile-nav">
+        <button class="active" onclick="showSection('overview')">Overview</button>
+        <button onclick="showSection('timeline')">Scores</button>
+        <button onclick="showSection('weaknesses')">Weaknesses</button>
+        <button onclick="showSection('drills')">Drills</button>
+        <button onclick="showSection('curriculum')">Curriculum</button>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            <div class="sidebar-brand"><span>English Practice</span> — Ram</div>
+            <a href="#overview" class="sidebar-link active" onclick="showSection('overview')">📊 Overview</a>
+<a href="#timeline" class="sidebar-link" onclick="showSection('timeline')">📈 Score Timeline</a>
+<a href="#weaknesses" class="sidebar-link" onclick="showSection('weaknesses')">🎯 Weakness Tracker</a>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-label">DRILLS</div>
+<a href="#drill-0" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(0)"><span class="sidebar-dot" style="background:#8b5cf6;"></span> The most important lesson of m</a>
+<a href="#drill-1" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(1)"><span class="sidebar-dot" style="background:#8b5cf6;"></span> Real wealth is never measured </a>
+<div class="sidebar-divider"></div>
+<a href="#curriculum" class="sidebar-link" onclick="showSection('curriculum')">📚 Curriculum</a>
+<a href="#weekly" class="sidebar-link" onclick="showSection('weekly')">📋 Weekly Summary</a>
+
+            <div class="sidebar-footer">Updated Feb 28, 2026</div>
+        </div>
+        <div class="content">
+
+            <!-- Overview -->
+            <div class="page active" id="overview">
+                <div class="page-title">English Practice</div>
+                <div class="page-meta">Frantically Speaking · AI Drills · PREP Framework</div>
+                
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Drills</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">11</div>
+            <div class="stat-label">Total Rounds</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">9.5</div>
+            <div class="stat-label">Avg Score</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">13<span class="stat-max">/15</span></div>
+            <div class="stat-label">Best Score</div>
+        </div>
+        <div class="stat-card accent">
+            <div class="stat-value">0<span class="stat-max">/25</span></div>
+            <div class="stat-label">FS Sessions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Days In</div>
+        </div>
+    </div>
+    
+                <div style="margin-bottom: 32px;">
+                    <h3 style="font-size: 16px; color: #e0e0e0; margin-bottom: 16px;">Score Timeline</h3>
+                    
+    <svg viewBox="0 0 680 280" class="score-chart">
+        <circle cx="50" cy="15" r="5" fill="#8b5cf6"/><text x="60" y="19" fill="#9ca3af" font-size="11">Impromptu Speech</text>
+        <line x1="50" y1="230.0" x2="650" y2="230.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="234.0" fill="#525252" font-size="11" text-anchor="end">0</text>
+<line x1="50" y1="190.0" x2="650" y2="190.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="194.0" fill="#525252" font-size="11" text-anchor="end">3</text>
+<line x1="50" y1="150.0" x2="650" y2="150.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="154.0" fill="#525252" font-size="11" text-anchor="end">6</text>
+<line x1="50" y1="110.0" x2="650" y2="110.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="114.0" fill="#525252" font-size="11" text-anchor="end">9</text>
+<line x1="50" y1="70.0" x2="650" y2="70.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="74.0" fill="#525252" font-size="11" text-anchor="end">12</text>
+<line x1="50" y1="30.0" x2="650" y2="30.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="34.0" fill="#525252" font-size="11" text-anchor="end">15</text>
+
+        <line x1="320.0" y1="30" x2="320.0" y2="230" stroke="#3d3d3d" stroke-width="1" stroke-dasharray="3,3"/>
+
+        <path d="M 50.0 150.0 L 110.0 123.33333333333333 L 170.0 96.66666666666669 L 230.0 56.66666666666666 L 290.0 56.66666666666666 L 350.0 96.66666666666669 L 410.0 110.0 L 470.0 96.66666666666669 L 530.0 96.66666666666669 L 590.0 150.0 L 650.0 96.66666666666669" fill="none" stroke="#4b5563" stroke-width="1.5" opacity="0.5"/>
+        <line x1="50" y1="103.93939393939395" x2="650" y2="101.51515151515153" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+        <text x="655" y="105.51515151515153" fill="#10b981" font-size="10" opacity="0.8">↑</text>
+        <circle cx="50.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 1\nScore: 6/15 (S:2 C:2 I:2)"/>
+<circle cx="110.0" cy="123.33333333333333" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 2\nScore: 8/15 (S:3 C:2 I:3)"/>
+<circle cx="170.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="230.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 4\nScore: 13/15 (S:5 C:4 I:4)"/>
+<circle cx="290.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 5\nScore: 13/15 (S:5 C:4 I:4)"/>
+<circle cx="350.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 1\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="410.0" cy="110.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 2\nScore: 9/15 (S:4 C:2 I:3)"/>
+<circle cx="470.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="530.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 4\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="590.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 5\nScore: 6/15 (S:2 C:2 I:2)"/>
+<circle cx="650.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 6\nScore: 10/15 (S:4 C:3 I:3)"/>
+
+        <text x="170.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">The most important lesson</text>
+<text x="530.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">Real wealth is never meas</text>
+
+    </svg>
+    
+                </div>
+                <h3 style="font-size: 16px; color: #e0e0e0; margin-bottom: 16px;">Top Weaknesses</h3>
+                <div class="weakness-grid">
+                    
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🟡</span>
+                <span class="weakness-name">Connector Chains</span>
+                <span class="weakness-status status-improving">IMPROVING</span>
+            </div>
+            <div class="weakness-desc">So/and then — improving but still present. Best performance: 0 'so's in Topic 5 Round 6.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🔴</span>
+                <span class="weakness-name">Generic Closings</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">Consistently adds a greeting-card moral lesson at the end instead of closing with the specific story. Identified across ALL rounds of Topic 5.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🔴</span>
+                <span class="weakness-name">Word Confusion</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">'Position' vs 'possessions', 'angers' vs 'encourages'. Common L1 interference patterns.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🔴</span>
+                <span class="weakness-name">Tense Consistency</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">Switches between past and present when telling stories. Needs to lock into past tense for narratives.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🟠</span>
+                <span class="weakness-name">Overthinking</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">More rounds ≠ better. Round 5 of Topic 5 scored lowest (6/15) due to over-explaining. Best speeches are shorter.</div>
+        </div>
+        
+                </div>
+            </div>
+
+            <!-- Score Timeline (full page) -->
+            <div class="page" id="timeline">
+                <div class="page-title">Score Timeline</div>
+                <div class="page-meta">Every round of every drill, color-coded by type</div>
+                
+    <svg viewBox="0 0 680 280" class="score-chart">
+        <circle cx="50" cy="15" r="5" fill="#8b5cf6"/><text x="60" y="19" fill="#9ca3af" font-size="11">Impromptu Speech</text>
+        <line x1="50" y1="230.0" x2="650" y2="230.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="234.0" fill="#525252" font-size="11" text-anchor="end">0</text>
+<line x1="50" y1="190.0" x2="650" y2="190.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="194.0" fill="#525252" font-size="11" text-anchor="end">3</text>
+<line x1="50" y1="150.0" x2="650" y2="150.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="154.0" fill="#525252" font-size="11" text-anchor="end">6</text>
+<line x1="50" y1="110.0" x2="650" y2="110.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="114.0" fill="#525252" font-size="11" text-anchor="end">9</text>
+<line x1="50" y1="70.0" x2="650" y2="70.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="74.0" fill="#525252" font-size="11" text-anchor="end">12</text>
+<line x1="50" y1="30.0" x2="650" y2="30.0" stroke="#2d2d2d" stroke-width="1"/>
+<text x="40" y="34.0" fill="#525252" font-size="11" text-anchor="end">15</text>
+
+        <line x1="320.0" y1="30" x2="320.0" y2="230" stroke="#3d3d3d" stroke-width="1" stroke-dasharray="3,3"/>
+
+        <path d="M 50.0 150.0 L 110.0 123.33333333333333 L 170.0 96.66666666666669 L 230.0 56.66666666666666 L 290.0 56.66666666666666 L 350.0 96.66666666666669 L 410.0 110.0 L 470.0 96.66666666666669 L 530.0 96.66666666666669 L 590.0 150.0 L 650.0 96.66666666666669" fill="none" stroke="#4b5563" stroke-width="1.5" opacity="0.5"/>
+        <line x1="50" y1="103.93939393939395" x2="650" y2="101.51515151515153" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+        <text x="655" y="105.51515151515153" fill="#10b981" font-size="10" opacity="0.8">↑</text>
+        <circle cx="50.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 1\nScore: 6/15 (S:2 C:2 I:2)"/>
+<circle cx="110.0" cy="123.33333333333333" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 2\nScore: 8/15 (S:3 C:2 I:3)"/>
+<circle cx="170.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="230.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 4\nScore: 13/15 (S:5 C:4 I:4)"/>
+<circle cx="290.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 5\nScore: 13/15 (S:5 C:4 I:4)"/>
+<circle cx="350.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 1\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="410.0" cy="110.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 2\nScore: 9/15 (S:4 C:2 I:3)"/>
+<circle cx="470.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="530.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 4\nScore: 10/15 (S:4 C:3 I:3)"/>
+<circle cx="590.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 5\nScore: 6/15 (S:2 C:2 I:2)"/>
+<circle cx="650.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 6\nScore: 10/15 (S:4 C:3 I:3)"/>
+
+        <text x="170.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">The most important lesson</text>
+<text x="530.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">Real wealth is never meas</text>
+
+    </svg>
+    
+            </div>
+
+            <!-- Weakness Tracker -->
+            <div class="page" id="weaknesses">
+                <div class="page-title">Weakness Tracker</div>
+                <div class="page-meta">Recurring patterns identified across drills</div>
+                <div class="weakness-grid">
+                    
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🟡</span>
+                <span class="weakness-name">Connector Chains</span>
+                <span class="weakness-status status-improving">IMPROVING</span>
+            </div>
+            <div class="weakness-desc">So/and then — improving but still present. Best performance: 0 'so's in Topic 5 Round 6.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🔴</span>
+                <span class="weakness-name">Generic Closings</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">Consistently adds a greeting-card moral lesson at the end instead of closing with the specific story. Identified across ALL rounds of Topic 5.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🔴</span>
+                <span class="weakness-name">Word Confusion</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">'Position' vs 'possessions', 'angers' vs 'encourages'. Common L1 interference patterns.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🔴</span>
+                <span class="weakness-name">Tense Consistency</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">Switches between past and present when telling stories. Needs to lock into past tense for narratives.</div>
+        </div>
+        
+        <div class="weakness-card">
+            <div class="weakness-header">
+                <span class="weakness-icon">🟠</span>
+                <span class="weakness-name">Overthinking</span>
+                <span class="weakness-status status-active">ACTIVE</span>
+            </div>
+            <div class="weakness-desc">More rounds ≠ better. Round 5 of Topic 5 scored lowest (6/15) due to over-explaining. Best speeches are shorter.</div>
+        </div>
+        
+                </div>
+            </div>
+
+            <!-- Drill History -->
+            <div class="page" id="drills">
+                <div class="page-title">Drill History</div>
+                <div class="page-meta">Click to expand round-by-round details</div>
+                
+        <div class="drill-item" onclick="this.classList.toggle('expanded')">
+            <div class="drill-header">
+                <div class="drill-color" style="background: #8b5cf6;"></div>
+                <div class="drill-info">
+                    <div class="drill-topic">The most important lesson of my life so far</div>
+                    <div class="drill-meta">Impromptu Speech · 2026-02-27 · 5 rounds · PREP (Point, Reason, Example, Point)</div>
+                </div>
+                <div class="drill-chevron">▾</div>
+            </div>
+            <div class="drill-details">
+                <div class="drill-improvement">+7 (6 → 13, consistent at 13)</div>
+                <div class="drill-key-msg">💡 Happiness should come from within, not from depending on others</div>
+                <div class="drill-rounds">
+                    
+                <div class="round-row">
+                    <span class="round-label">Round 1</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 40%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">6/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 2</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 53%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">8/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 3</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">10/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 4</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 86%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">13/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 5</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 86%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">13/15</span>
+                </div>
+                
+                </div>
+                <div class="drill-corrections"><strong>Corrections Applied:</strong><ul><li>Stopped circular answers — picked one idea and stuck with it</li><li>Added specific personal story instead of generic statements</li><li>Reduced connector chains (so/and then) from 8+ to 1</li><li>Clean PREP structure by Round 4</li></ul></div>
+                <div class="drill-remaining"><strong>Still Working On:</strong> Closing still hedges — needs to end with conviction, not softening</div>
+            </div>
+        </div>
+        
+        <div class="drill-item" onclick="this.classList.toggle('expanded')">
+            <div class="drill-header">
+                <div class="drill-color" style="background: #8b5cf6;"></div>
+                <div class="drill-info">
+                    <div class="drill-topic">Real wealth is never measured in money or possessions</div>
+                    <div class="drill-meta">Impromptu Speech · 2026-02-27 · 6 rounds · PREP (Point, Reason, Example, Point)</div>
+                </div>
+                <div class="drill-chevron">▾</div>
+            </div>
+            <div class="drill-details">
+                <div class="drill-improvement">Baseline 10, dipped to 6 (overthinking), recovered to 10</div>
+                <div class="drill-key-msg">💡 Real wealth is kindness — cricket story, brother who encouraged him</div>
+                <div class="drill-rounds">
+                    
+                <div class="round-row">
+                    <span class="round-label">Round 1</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">10/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 2</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 60%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">9/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 3</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">10/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 4</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">10/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 5</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 40%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">6/15</span>
+                </div>
+                
+                <div class="round-row">
+                    <span class="round-label">Round 6</span>
+                    <div class="round-bar-track">
+                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
+                    </div>
+                    <span class="round-score">10/15</span>
+                </div>
+                
+                </div>
+                <div class="drill-corrections"><strong>Corrections Applied:</strong><ul><li>Fixed 'angers' to 'encourages' (meaning-changing word error)</li><li>Added specific person and story (cricket brother)</li><li>Eliminated 'so' starters by Round 6 (zero in Round 6)</li><li>PREP structure consistent</li></ul></div>
+                <div class="drill-remaining"><strong>Still Working On:</strong><ul><li>Keeps adding generic moral lesson at the end instead of trusting the story to land</li><li>'Position' vs 'possessions' — corrected 4 times, not yet fixed</li><li>Past tense slips ('I love' instead of 'I loved', 'though I am' instead of 'though I was')</li><li>Overthinking leads to longer/weaker responses (Round 5 = 6/15)</li></ul></div>
+            </div>
+        </div>
+        
+            </div>
+
+            <!-- Curriculum -->
+            <div class="page" id="curriculum">
+                <div class="page-title">Frantically Speaking</div>
+                <div class="page-meta">25-session 1:1 program with Coach Chaitu</div>
+                
+    <div class="fs-progress">
+        <div class="fs-bar-container">
+            <div class="fs-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="fs-bar-label">0 / 25 sessions completed (0%)</div>
+    </div>
+    <div class="module-grid">
+        
+        <div class="module-card">
+            <div class="module-header">
+                <span class="module-num">Module 1</span>
+                <span class="module-badge drillable">AI + Coach</span>
+            </div>
+            <div class="module-title">Confident Communication &amp; Habit Formation</div>
+            <ul class="module-items"><li>3 C's of public speaking: Confidence, Clarity, Conciseness</li><li>Communication skills myths &amp; mistakes</li><li>Structuring content to express thoughts in the most effective way</li><li>Getting rid of umm's and ahh's (and other filler words)</li><li>Habit Formation — Applying techniques from Atomic Habits</li></ul>
+        </div>
+        
+        <div class="module-card">
+            <div class="module-header">
+                <span class="module-num">Module 2</span>
+                <span class="module-badge drillable">AI + Coach</span>
+            </div>
+            <div class="module-title">Grammar — Language Learning &amp; Acquisition</div>
+            <ul class="module-items"><li>Understanding grammar sequence</li><li>Getting rid of common grammatical sins</li><li>Parts of speech</li><li>Sentence formation</li><li>Daily mini-tasks for acquiring and learning grammar usage</li></ul>
+        </div>
+        
+        <div class="module-card">
+            <div class="module-header">
+                <span class="module-num">Module 3</span>
+                <span class="module-badge drillable">AI + Coach</span>
+            </div>
+            <div class="module-title">Vocabulary &amp; Business English</div>
+            <ul class="module-items"><li>Expanding current vocabulary</li><li>Active and Passive Voice</li><li>Power Words and Positive Phrasing</li><li>Business words, phrases, and idioms</li><li>Business Tenses</li></ul>
+        </div>
+        
+        <div class="module-card">
+            <div class="module-header">
+                <span class="module-num">Module 4</span>
+                <span class="module-badge coach-only">Coach Only</span>
+            </div>
+            <div class="module-title">Body Language &amp; Listening Skills</div>
+            <ul class="module-items"><li>Power poses to look more commanding while speaking</li><li>Functional gesturing — how to use your hands correctly while speaking</li><li>Understanding the power &amp; use of facial expressions</li><li>Understanding Active and Deep Listening</li></ul>
+        </div>
+        
+        <div class="module-card">
+            <div class="module-header">
+                <span class="module-num">Module 5</span>
+                <span class="module-badge coach-only">Coach Only</span>
+            </div>
+            <div class="module-title">Pronunciation &amp; Accent Neutralization</div>
+            <ul class="module-items"><li>Syllable Stress and Word Stress</li><li>Understanding 44 Phonemes</li><li>Noun and Verb Stress</li><li>Getting rid of accent flaws</li><li>Neutralize your accent to sound more polished</li><li>URL: https://edition.cnn.com/audio</li><li>Listen to CNN audio daily for at least 15 minutes</li><li>Focus on how anchors structure sentences, transitions, and vocabulary</li><li>URL: https://www.oxfordonlineenglish.com/english-level-test</li><li>Take all tests:</li><li>Record scores in `progress/weekly_summary.md`</li><li>Topic 1: &quot;Will Artificial Intelligence replace most human jobs?&quot;</li><li>Topic 2: &quot;The impact of social media on mental health&quot;</li><li>Practice structuring 2-minute responses for each</li></ul>
+        </div>
+        
+    </div>
+    
+                
+    <div class="oxford-section">
+        <h3>Oxford Baseline Assessment</h3>
+        <table class="oxford-table">
+            <thead><tr><th>Test</th><th>Score</th><th>%</th><th>CEFR</th></tr></thead>
+            <tbody>
+        <tr>
+            <td>Listening</td>
+            <td>18/24</td>
+            <td>75%</td>
+            <td><span class="cefr-badge">B1 (Intermediate)</span></td>
+        </tr>
+        
+        <tr>
+            <td>Vocabulary</td>
+            <td>24/40</td>
+            <td>60%</td>
+            <td><span class="cefr-badge">B1 (Intermediate)</span></td>
+        </tr>
+        
+        <tr>
+            <td>Grammar</td>
+            <td>31/40</td>
+            <td>77.5%</td>
+            <td><span class="cefr-badge">B1 (Intermediate)</span></td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    
+            </div>
+
+            <!-- Weekly Summary -->
+            <div class="page" id="weekly">
+                <div class="page-title">Weekly Summary</div>
+                <div class="page-meta">Updated every Sunday during weekly review</div>
+                <p class="weekly-text">Track weekly progress here. Updated every Sunday during weekly session.</p><p class="weekly-text">---</p><h3 class="weekly-heading">Baseline Assessment — Feb 22, 2026 (Oxford Online English)</h3><div class="weekly-table-row">Test · Score · Percentage · CEFR Level</div><p class="weekly-text">|------|-------|-----------|------------|</p><div class="weekly-table-row">Listening · 18/24 · 75% · B1 (Intermediate)</div><div class="weekly-table-row">Vocabulary · 24/40 · 60% · B1 (Intermediate)</div><div class="weekly-table-row">Grammar · 31/40 · 77.5% · B1 (Intermediate)</div><div class="weekly-table-row">Reading · — · — · Not taken yet</div><p class="weekly-text">**Summary:** Solid B1 across the board. Listening &gt; Vocabulary. Goal is to reach B2 (Upper Intermediate) by end of Frantically Speaking program.</p><p class="weekly-text">---</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            const page = document.getElementById(id);
+            if (page) page.classList.add('active');
+            const link = document.querySelector(`[onclick*="'${id}'"]`);
+            if (link) link.classList.add('active');
+            // Mobile buttons
+            document.querySelectorAll('.mobile-nav button').forEach(b => b.classList.remove('active'));
+            const mBtn = document.querySelector(`.mobile-nav button[onclick*="'${id}'"]`);
+            if (mBtn) mBtn.classList.add('active');
+        }
+
+        function scrollToDrill(i) {
+            setTimeout(() => {
+                const items = document.querySelectorAll('.drill-item');
+                if (items[i]) {
+                    items[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    items[i].classList.add('expanded');
+                }
+            }, 100);
+        }
+
+        // Tooltip for score dots
+        const tooltip = document.getElementById('tooltip');
+        document.querySelectorAll('.score-dot').forEach(dot => {
+            dot.addEventListener('mouseenter', e => {
+                tooltip.textContent = dot.getAttribute('data-tip').replace(/\\n/g, '\n');
+                tooltip.style.display = 'block';
+                tooltip.style.left = e.clientX + 12 + 'px';
+                tooltip.style.top = e.clientY - 10 + 'px';
+            });
+            dot.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+            });
+            dot.addEventListener('mousemove', e => {
+                tooltip.style.left = e.clientX + 12 + 'px';
+                tooltip.style.top = e.clientY - 10 + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
