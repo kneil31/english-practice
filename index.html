@@ -3,1368 +3,636 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow, noarchive">
-    <meta name="referrer" content="no-referrer">
-    <title>English Practice — Ram's Dashboard</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>English Practice — Ram</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #191919;
-            color: #e0e0e0;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .layout { display: flex; height: 100vh; }
-
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            min-width: 260px;
-            background: #202020;
-            border-right: 1px solid #2d2d2d;
-            padding: 20px 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .sidebar-brand {
-            padding: 8px 12px 20px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #9ca3af;
-            letter-spacing: -0.3px;
-        }
-        .sidebar-brand span { color: #10b981; }
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            margin: 1px 0;
-            color: #9ca3af;
-            text-decoration: none;
-            font-size: 14px;
-            border-radius: 6px;
-            transition: all 0.15s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #0f0f0f;
+            color: #d4d4d4;
             line-height: 1.5;
-            cursor: pointer;
-        }
-        .sidebar-link:hover { background: #2d2d2d; color: #e0e0e0; }
-        .sidebar-link.active { background: #2d2d2d; color: #ffffff; }
-        .sidebar-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-        .sidebar-section-label {
-            padding: 12px 12px 4px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #525252;
-            letter-spacing: 1px;
-        }
-        .sidebar-divider {
-            height: 1px;
-            background: #2d2d2d;
-            margin: 8px 12px;
-        }
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 16px 12px 8px;
-            font-size: 11px;
-            color: #525252;
         }
 
-        /* Content */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 40px 60px;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
         }
 
-        /* Pages */
-        .page {
-            display: none;
-            max-width: 780px;
-            animation: fadeIn 0.2s;
-        }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .page-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 6px;
-            letter-spacing: -0.5px;
-        }
-        .page-meta {
-            font-size: 14px;
-            color: #6b7280;
+        /* Header */
+        .header {
             margin-bottom: 32px;
         }
-
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 36px;
-            flex-wrap: wrap;
-        }
-        .stat-card {
-            background: #202020;
-            border: 1px solid #2d2d2d;
-            border-radius: 10px;
-            padding: 16px 20px;
-            min-width: 100px;
-            flex: 1;
-            text-align: center;
-        }
-        .stat-card.accent {
-            border-color: #10b981;
-            background: #0d2818;
-        }
-        .stat-value {
+        .header h1 {
             font-size: 28px;
             font-weight: 700;
-            color: #ffffff;
+            color: #fafafa;
+            letter-spacing: -0.5px;
         }
-        .stat-max {
+        .header .subtitle {
             font-size: 14px;
-            color: #6b7280;
-            font-weight: 400;
-        }
-        .stat-label {
-            font-size: 11px;
-            color: #6b7280;
+            color: #737373;
             margin-top: 4px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
         }
-
-        /* Score Chart */
-        .score-chart {
-            width: 100%;
-            max-width: 700px;
-            margin: 20px 0;
-        }
-        .score-dot {
-            cursor: pointer;
-            transition: r 0.15s;
-        }
-        .score-dot:hover {
-            r: 8;
-        }
-
-        /* Tooltip */
-        .chart-tooltip {
-            position: fixed;
-            background: #2d2d2d;
-            border: 1px solid #4b5563;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-size: 12px;
-            color: #e0e0e0;
-            pointer-events: none;
-            display: none;
-            z-index: 100;
-            white-space: pre-line;
-            max-width: 300px;
-        }
-
-        /* Weakness Cards */
-        .weakness-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .weakness-card {
-            background: #202020;
-            border: 1px solid #2d2d2d;
-            border-radius: 10px;
-            padding: 16px 20px;
-        }
-        .weakness-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        .weakness-icon { font-size: 16px; }
-        .weakness-name {
-            font-weight: 600;
-            color: #e0e0e0;
-            font-size: 14px;
-            flex: 1;
-        }
-        .weakness-status {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
-        .status-active { background: #3b1010; color: #ef4444; }
-        .status-improving { background: #2d2006; color: #f59e0b; }
-        .status-resolved { background: #0d2818; color: #10b981; }
-        .weakness-desc {
-            font-size: 13px;
-            color: #9ca3af;
-            line-height: 1.6;
-        }
-
-        /* Drill History */
-        .drill-item {
-            background: #202020;
-            border: 1px solid #2d2d2d;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: border-color 0.15s;
-        }
-        .drill-item:hover { border-color: #4b5563; }
-        .drill-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 20px;
-        }
-        .drill-color {
-            width: 4px;
-            height: 36px;
-            border-radius: 2px;
-            flex-shrink: 0;
-        }
-        .drill-info { flex: 1; }
-        .drill-topic {
-            font-size: 14px;
-            font-weight: 600;
-            color: #e0e0e0;
-        }
-        .drill-meta {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 2px;
-        }
-        .drill-chevron {
+        .updated {
+            font-size: 11px;
             color: #525252;
-            font-size: 14px;
-            transition: transform 0.2s;
+            margin-top: 8px;
         }
-        .drill-item.expanded .drill-chevron { transform: rotate(180deg); }
-        .drill-details {
-            display: none;
-            padding: 0 20px 20px 36px;
+
+        /* Section */
+        .section {
+            margin-bottom: 40px;
         }
-        .drill-item.expanded .drill-details { display: block; }
-        .drill-improvement {
+        .section-title {
             font-size: 13px;
-            color: #10b981;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-        .drill-key-msg {
-            font-size: 13px;
-            color: #a78bfa;
+            font-weight: 700;
+            color: #737373;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             margin-bottom: 16px;
-            font-style: italic;
-        }
-
-        /* Round Bars */
-        .drill-rounds { margin-bottom: 16px; }
-        .round-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
-        }
-        .round-label {
-            font-size: 11px;
-            color: #6b7280;
-            width: 60px;
-            flex-shrink: 0;
-        }
-        .round-bar-track {
-            flex: 1;
-            height: 8px;
-            background: #2d2d2d;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .round-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-        .round-score {
-            font-size: 11px;
-            color: #9ca3af;
-            width: 40px;
-            text-align: right;
-            flex-shrink: 0;
-        }
-
-        /* Corrections */
-        .drill-corrections, .drill-remaining {
-            font-size: 13px;
-            color: #9ca3af;
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-        .drill-corrections strong { color: #10b981; }
-        .drill-remaining strong { color: #f59e0b; }
-        .drill-corrections ul, .drill-remaining ul {
-            margin: 6px 0 0 20px;
-        }
-        .drill-corrections li, .drill-remaining li {
-            margin-bottom: 4px;
-        }
-
-        /* Curriculum */
-        .fs-progress { margin-bottom: 24px; }
-        .fs-bar-container {
-            height: 12px;
-            background: #2d2d2d;
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-        .fs-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981, #34d399);
-            border-radius: 6px;
-            transition: width 0.5s;
-        }
-        .fs-bar-label {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .module-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 32px;
-        }
-        .module-card {
-            background: #202020;
-            border: 1px solid #2d2d2d;
-            border-radius: 10px;
-            padding: 18px;
-        }
-        .module-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-        .module-num {
-            font-size: 11px;
-            font-weight: 700;
-            color: #525252;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .module-badge {
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-        .module-badge.drillable { background: #0d2818; color: #10b981; }
-        .module-badge.coach-only { background: #1e1b4b; color: #818cf8; }
-        .module-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #e0e0e0;
-            margin-bottom: 10px;
-        }
-        .module-items {
-            font-size: 12px;
-            color: #9ca3af;
-            line-height: 1.7;
-            margin-left: 16px;
-        }
-
-        /* Oxford Scores */
-        .oxford-section {
-            margin-bottom: 32px;
-        }
-        .oxford-section h3 {
-            font-size: 16px;
-            color: #e0e0e0;
-            margin-bottom: 12px;
-        }
-        .oxford-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        .oxford-table th {
-            text-align: left;
-            padding: 8px 12px;
-            border-bottom: 2px solid #2d2d2d;
-            color: #6b7280;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .oxford-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #2d2d2d;
-            color: #e0e0e0;
-        }
-        .cefr-badge {
-            background: #1e3a5f;
-            color: #60a5fa;
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        /* Weekly */
-        .weekly-heading {
-            font-size: 16px;
-            color: #e0e0e0;
-            margin: 20px 0 10px;
-        }
-        .weekly-subheading {
-            font-size: 14px;
-            color: #9ca3af;
-            margin: 14px 0 8px;
-        }
-        .weekly-item {
-            font-size: 13px;
-            color: #9ca3af;
-            padding: 4px 0;
-            line-height: 1.6;
-        }
-        .weekly-item strong { color: #e0e0e0; }
-        .weekly-note {
-            font-size: 13px;
-            color: #e0e0e0;
-            margin: 8px 0;
-        }
-        .weekly-text {
-            font-size: 13px;
-            color: #9ca3af;
-            line-height: 1.6;
-            margin: 4px 0;
-        }
-        .weekly-table-row {
-            font-size: 12px;
-            color: #9ca3af;
-            padding: 6px 12px;
-            background: #202020;
-            border-radius: 4px;
-            margin: 2px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #262626;
         }
 
         /* Next Session Card */
-        .next-session-card {
-            background: linear-gradient(135deg, #1a2332 0%, #1a1a2e 100%);
-            border: 2px solid #3b82f6;
+        .next-card {
+            background: #171720;
+            border: 1px solid #2563eb;
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 32px;
         }
-        .next-header {
+        .next-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
-        .next-label {
+        .next-badge {
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 1.5px;
-            color: #3b82f6;
-            text-transform: uppercase;
+            color: #60a5fa;
         }
         .next-date {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            color: #ffffff;
+            color: #fafafa;
         }
-        .next-body {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .hw-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
         }
-        .next-section-title {
-            font-size: 13px;
+        .hw-title {
+            font-size: 12px;
             font-weight: 600;
-            color: #9ca3af;
+            color: #a3a3a3;
+            margin-bottom: 10px;
+        }
+        .hw-row {
+            display: flex;
+            gap: 10px;
+            padding: 5px 0;
+            font-size: 13px;
+        }
+        .hw-day {
+            font-weight: 700;
+            color: #60a5fa;
+            min-width: 50px;
+        }
+        .hw-topic { color: #d4d4d4; }
+        .hw-topic.discuss { color: #a78bfa; font-style: italic; }
+        .hw-reminder {
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
             margin-bottom: 8px;
         }
-        .next-schedule-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 6px 0;
-        }
-        .next-day {
-            font-size: 12px;
-            font-weight: 700;
-            color: #3b82f6;
-            min-width: 70px;
-        }
-        .next-topic {
-            font-size: 13px;
-            color: #e0e0e0;
-        }
-        .next-discussion {
-            font-size: 13px;
-            color: #a78bfa;
-            padding: 8px 12px;
-            background: rgba(167, 139, 250, 0.1);
-            border-radius: 6px;
-        }
-        .next-reading {
-            font-size: 13px;
+        .hw-reminder.warn {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
             font-weight: 600;
-            color: #f59e0b;
         }
-        .next-tip {
-            font-size: 12px;
-            color: #10b981;
-            padding: 8px 12px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 6px;
+        .hw-reminder.tip {
+            background: rgba(34, 197, 94, 0.08);
+            color: #4ade80;
             font-style: italic;
         }
 
-        /* Empty State */
-        .empty-state {
+        /* Stats */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            background: #171717;
+            border: 1px solid #262626;
+            border-radius: 10px;
+            padding: 16px 20px;
+            min-width: 90px;
+            flex: 1;
             text-align: center;
-            padding: 40px;
-            color: #525252;
+        }
+        .stat-num {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fafafa;
+        }
+        .stat-dim {
             font-size: 14px;
+            color: #525252;
+            font-weight: 400;
+        }
+        .stat-lbl {
+            font-size: 11px;
+            color: #525252;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .progress-stat {
+            min-width: 140px;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #262626;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+            border-radius: 4px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+        }
+        .tl-row {
+            display: grid;
+            grid-template-columns: 100px 32px 1fr;
+            gap: 0;
+            min-height: 60px;
+            margin-bottom: 4px;
+        }
+        .tl-ann {
+            background: rgba(37, 99, 235, 0.04);
+            border-radius: 8px;
+            padding: 8px 0;
+        }
+        .tl-left {
+            text-align: right;
+            padding-right: 16px;
+            padding-top: 2px;
+        }
+        .tl-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: #a3a3a3;
+        }
+        .tl-badge {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            padding: 1px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .badge-ann { background: #1e3a5f; color: #60a5fa; }
+        .badge-self { background: #1a2e1a; color: #4ade80; }
+        .tl-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .tl-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #404040;
+            border: 2px solid #0f0f0f;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        .tl-dot-ann {
+            background: #2563eb;
+            width: 12px;
+            height: 12px;
+        }
+        .tl-line {
+            width: 2px;
+            flex: 1;
+            background: #262626;
+        }
+        .tl-right {
+            padding-left: 16px;
+            padding-bottom: 16px;
+        }
+        .tl-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+        }
+        .tl-topic {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e5e5e5;
+        }
+        .tl-score {
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .tl-max {
+            font-size: 11px;
+            color: #525252;
+            font-weight: 400;
+        }
+        .score-great { color: #4ade80; }
+        .score-ok { color: #fbbf24; }
+        .score-low { color: #f87171; }
+        .tl-type {
+            font-size: 11px;
+            color: #737373;
+            margin-top: 2px;
+        }
+        .tl-activity {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 3px 0;
+            color: #a3a3a3;
+        }
+        .tl-act-topic { flex: 1; }
+        .tl-act-score {
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        .tl-best {
+            font-size: 12px;
+            color: #4ade80;
+            margin-top: 6px;
+        }
+        .tl-takeaway {
+            font-size: 12px;
+            color: #a78bfa;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* Weaknesses */
+        .w-group {
+            margin-bottom: 20px;
+        }
+        .w-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #737373;
+            margin-bottom: 8px;
+        }
+        .w-card {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border-left: 3px solid;
+        }
+        .w-active {
+            background: #1a1111;
+            border-color: #ef4444;
+        }
+        .w-improving {
+            background: #1a1700;
+            border-color: #f59e0b;
+        }
+        .w-insight {
+            background: #0f1a14;
+            border-color: #22c55e;
+        }
+        .w-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e5e5e5;
+            margin-bottom: 4px;
+        }
+        .w-desc {
+            font-size: 12px;
+            color: #a3a3a3;
+            line-height: 1.6;
+        }
+
+        /* Session Log */
+        .sess-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            background: #171717;
+            border: 1px solid #262626;
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+        .sess-done { border-left: 3px solid #22c55e; }
+        .sess-pending { border-left: 3px solid #404040; opacity: 0.6; }
+        .sess-num {
+            font-size: 20px;
+            font-weight: 700;
+            color: #525252;
+            min-width: 30px;
+        }
+        .sess-done .sess-num { color: #fafafa; }
+        .sess-info { flex: 1; }
+        .sess-date {
+            font-size: 13px;
+            color: #a3a3a3;
+        }
+        .sess-type {
+            font-size: 11px;
+            color: #525252;
+        }
+        .sess-score {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fafafa;
         }
 
         /* Mobile */
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .content { padding: 20px; }
-            .stats-bar { flex-direction: column; }
-            .stat-card { min-width: auto; }
-            .module-grid { grid-template-columns: 1fr; }
-            .page-title { font-size: 24px; }
-        }
-
-        /* Mobile nav toggle */
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            background: #202020;
-            padding: 12px 16px;
-            z-index: 50;
-            border-bottom: 1px solid #2d2d2d;
-        }
-        .mobile-nav button {
-            background: none;
-            border: 1px solid #4b5563;
-            color: #e0e0e0;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            margin-right: 6px;
-        }
-        .mobile-nav button.active {
-            background: #2d2d2d;
-            border-color: #10b981;
-        }
-        @media (max-width: 768px) {
-            .mobile-nav { display: flex; gap: 4px; overflow-x: auto; }
-            .content { padding-top: 60px; }
+        @media (max-width: 640px) {
+            .container { padding: 24px 16px 60px; }
+            .header h1 { font-size: 22px; }
+            .hw-grid { grid-template-columns: 1fr; gap: 16px; }
+            .stats-row { gap: 8px; }
+            .stat { padding: 12px; min-width: 70px; }
+            .stat-num { font-size: 20px; }
+            .tl-row { grid-template-columns: 70px 24px 1fr; }
+            .tl-left { padding-right: 8px; }
+            .tl-badge { font-size: 9px; }
         }
     </style>
 </head>
 <body>
-    <div class="chart-tooltip" id="tooltip"></div>
+    <div class="container">
 
-    <div class="mobile-nav">
-        <button class="active" onclick="showSection('overview')">Overview</button>
-        <button onclick="showSection('timeline')">Scores</button>
-        <button onclick="showSection('weaknesses')">Weaknesses</button>
-        <button onclick="showSection('drills')">Drills</button>
-        <button onclick="showSection('curriculum')">Curriculum</button>
-    </div>
-
-    <div class="layout">
-        <div class="sidebar">
-            <div class="sidebar-brand"><span>English Practice</span> — Ram</div>
-            <a href="#overview" class="sidebar-link active" onclick="showSection('overview')">📊 Overview</a>
-<a href="#timeline" class="sidebar-link" onclick="showSection('timeline')">📈 Score Timeline</a>
-<a href="#weaknesses" class="sidebar-link" onclick="showSection('weaknesses')">🎯 Weakness Tracker</a>
-<div class="sidebar-divider"></div>
-<div class="sidebar-section-label">DRILLS</div>
-<a href="#drill-0" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(0)"><span class="sidebar-dot" style="background:#8b5cf6;"></span> The most important lesson of m</a>
-<a href="#drill-1" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(1)"><span class="sidebar-dot" style="background:#8b5cf6;"></span> Real wealth is never measured </a>
-<a href="#drill-2" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(2)"><span class="sidebar-dot" style="background:#6b7280;"></span> Credit Cards</a>
-<a href="#drill-3" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(3)"><span class="sidebar-dot" style="background:#6b7280;"></span> Nvidia GTC 2026 keynote — Blac</a>
-<a href="#drill-4" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(4)"><span class="sidebar-dot" style="background:#6b7280;"></span> The Monk Who Sold His Ferrari </a>
-<a href="#drill-5" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(5)"><span class="sidebar-dot" style="background:#6b7280;"></span> Can hobbies become careers?</a>
-<a href="#drill-6" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(6)"><span class="sidebar-dot" style="background:#6b7280;"></span> How has the digital world chan</a>
-<a href="#drill-7" class="sidebar-link" onclick="showSection('drills'); scrollToDrill(7)"><span class="sidebar-dot" style="background:#6b7280;"></span> Leadership, Workplace Wellness</a>
-<div class="sidebar-divider"></div>
-<a href="#curriculum" class="sidebar-link" onclick="showSection('curriculum')">📚 Curriculum</a>
-<a href="#weekly" class="sidebar-link" onclick="showSection('weekly')">📋 Weekly Summary</a>
-
-            <div class="sidebar-footer">Updated Mar 18, 2026</div>
+        <div class="header">
+            <h1>English Practice</h1>
+            <div class="subtitle">Frantically Speaking &middot; 25 Sessions with Coach Ann</div>
+            <div class="updated">Updated Mar 18, 2026 10:57 AM</div>
         </div>
-        <div class="content">
 
-            <!-- Overview -->
-            <div class="page active" id="overview">
-                <div class="page-title">English Practice</div>
-                <div class="page-meta">Frantically Speaking · AI Drills · PREP Framework</div>
-                
-    <div class="next-session-card">
-        <div class="next-header">
-            <span class="next-label">NEXT SESSION</span>
-            <span class="next-date">Friday Mar 21, 9:30 PM (Session 4)</span>
-        </div>
-        <div class="next-body">
-            <div class="next-section">
-                <div class="next-section-title">Video Homework (1.5 min each, one per day)</div>
-                
-        <div class="next-schedule-row">
-            <span class="next-day">Wed 19</span>
-            <span class="next-topic">The evolution of company culture in hybrid models</span>
-        </div>
         
-        <div class="next-schedule-row">
-            <span class="next-day">Thu 20</span>
-            <span class="next-topic">Integrating Artificial Intelligence into daily workflows</span>
+    <div class="next-card">
+        <div class="next-top">
+            <div class="next-badge">NEXT SESSION</div>
+            <div class="next-date">Friday Mar 21, 9:30 PM (Session 4)</div>
         </div>
-        
-        <div class="next-schedule-row">
-            <span class="next-day">Fri 21 AM</span>
-            <span class="next-topic">Combatting burnout and prioritizing workplace wellness</span>
-        </div>
-        
+        <div class="hw-grid">
+            <div class="hw-col">
+                <div class="hw-title">Video Homework (1.5 min each)</div>
+                <div class="hw-row"><span class="hw-day">Wed</span><span class="hw-topic">The evolution of company culture in hybrid models</span></div><div class="hw-row"><span class="hw-day">Thu</span><span class="hw-topic">Integrating Artificial Intelligence into daily workflows</span></div><div class="hw-row"><span class="hw-day">Fri AM</span><span class="hw-topic">Combatting burnout and prioritizing workplace wellness</span></div>
+                <div class="hw-row"><span class="hw-day">Live</span><span class="hw-topic discuss">Psychological safety and building a culture of trust (no video, discuss live)</span></div>
             </div>
-            <div class="next-discussion">Discussion only (no video): Psychological safety and building a culture of trust (no video, discuss live)</div>
-            <div class="next-reading">READ READ READ — Ann's #1 feedback, repeated again</div>
-            <div class="next-tip">Personal story = 4/5. Abstract = 2/5. Prep a specific example for each topic.</div>
+            <div class="hw-col">
+                <div class="hw-title">Reminders</div>
+                <div class="hw-reminder warn">READ READ READ — Ann's #1 feedback, repeated again</div>
+                <div class="hw-reminder tip">Prep a personal story for each topic — that's where you score 4/5.</div>
+            </div>
         </div>
     </div>
     
-                
-    <div class="stats-bar">
-        <div class="stat-card">
-            <div class="stat-value">8</div>
-            <div class="stat-label">Drills</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">21</div>
-            <div class="stat-label">Total Rounds</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">9.5</div>
-            <div class="stat-label">Avg Score</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">13<span class="stat-max">/15</span></div>
-            <div class="stat-label">Best Score</div>
-        </div>
-        <div class="stat-card accent">
-            <div class="stat-value">3<span class="stat-max">/25</span></div>
-            <div class="stat-label">FS Sessions</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">19</div>
-            <div class="stat-label">Days In</div>
+
+        <div class="section">
+            <div class="section-title">Progress</div>
+            
+    <div class="stats-row">
+        <div class="stat"><div class="stat-num">3<span class="stat-dim">/25</span></div><div class="stat-lbl">Sessions</div></div>
+        <div class="stat"><div class="stat-num">8</div><div class="stat-lbl">Drills</div></div>
+        <div class="stat"><div class="stat-num">2.6<span class="stat-dim">/5</span></div><div class="stat-lbl">Avg Score</div></div>
+        <div class="stat"><div class="stat-num">19</div><div class="stat-lbl">Days In</div></div>
+        <div class="stat progress-stat">
+            <div class="progress-bar"><div class="progress-fill" style="width:12%"></div></div>
+            <div class="stat-lbl">12% Complete</div>
         </div>
     </div>
     
-                <div style="margin-bottom: 32px;">
-                    <h3 style="font-size: 16px; color: #e0e0e0; margin-bottom: 16px;">Score Timeline</h3>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Drill Timeline</div>
+            <div class="timeline">
+            <div class="tl-row ">
+                <div class="tl-left">
+                    <div class="tl-date">Feb 27</div>
+                    <div class="tl-badge badge-self">Self-Practice</div>
+                </div>
+                <div class="tl-center">
+                    <div class="tl-dot "></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">The most important lesson of my life so far</span>
+                        <span class="tl-score score-ok">10.0<span class="tl-max">/15</span></span>
+                    </div>
+                    <div class="tl-type">Impromptu Speech</div>
                     
-    <svg viewBox="0 0 680 280" class="score-chart">
-        <circle cx="50" cy="15" r="5" fill="#8b5cf6"/><text x="60" y="19" fill="#9ca3af" font-size="11">Impromptu Speech</text>
-        <line x1="50" y1="230.0" x2="650" y2="230.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="234.0" fill="#525252" font-size="11" text-anchor="end">0</text>
-<line x1="50" y1="190.0" x2="650" y2="190.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="194.0" fill="#525252" font-size="11" text-anchor="end">3</text>
-<line x1="50" y1="150.0" x2="650" y2="150.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="154.0" fill="#525252" font-size="11" text-anchor="end">6</text>
-<line x1="50" y1="110.0" x2="650" y2="110.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="114.0" fill="#525252" font-size="11" text-anchor="end">9</text>
-<line x1="50" y1="70.0" x2="650" y2="70.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="74.0" fill="#525252" font-size="11" text-anchor="end">12</text>
-<line x1="50" y1="30.0" x2="650" y2="30.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="34.0" fill="#525252" font-size="11" text-anchor="end">15</text>
-
-        <line x1="320.0" y1="30" x2="320.0" y2="230" stroke="#3d3d3d" stroke-width="1" stroke-dasharray="3,3"/>
-
-        <path d="M 50.0 150.0 L 110.0 123.33333333333333 L 170.0 96.66666666666669 L 230.0 56.66666666666666 L 290.0 56.66666666666666 L 350.0 96.66666666666669 L 410.0 110.0 L 470.0 96.66666666666669 L 530.0 96.66666666666669 L 590.0 150.0 L 650.0 96.66666666666669" fill="none" stroke="#4b5563" stroke-width="1.5" opacity="0.5"/>
-        <line x1="50" y1="103.93939393939395" x2="650" y2="101.51515151515153" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
-        <text x="655" y="105.51515151515153" fill="#10b981" font-size="10" opacity="0.8">↑</text>
-        <circle cx="50.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 1\nScore: 6/15 (S:2 C:2 I:2)"/>
-<circle cx="110.0" cy="123.33333333333333" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 2\nScore: 8/15 (S:3 C:2 I:3)"/>
-<circle cx="170.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="230.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 4\nScore: 13/15 (S:5 C:4 I:4)"/>
-<circle cx="290.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 5\nScore: 13/15 (S:5 C:4 I:4)"/>
-<circle cx="350.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 1\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="410.0" cy="110.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 2\nScore: 9/15 (S:4 C:2 I:3)"/>
-<circle cx="470.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="530.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 4\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="590.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 5\nScore: 6/15 (S:2 C:2 I:2)"/>
-<circle cx="650.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 6\nScore: 10/15 (S:4 C:3 I:3)"/>
-
-        <text x="170.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">The most important lesson</text>
-<text x="530.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">Real wealth is never meas</text>
-
-    </svg>
-    
-                </div>
-                <h3 style="font-size: 16px; color: #e0e0e0; margin-bottom: 16px;">Top Weaknesses</h3>
-                <div class="weakness-grid">
                     
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🟡</span>
-                <span class="weakness-name">Connector Chains</span>
-                <span class="weakness-status status-improving">IMPROVING</span>
-            </div>
-            <div class="weakness-desc">So/and then — improving but still present. Best performance: 0 'so's in Topic 5 Round 6.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Generic Closings</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Consistently adds a greeting-card moral lesson at the end instead of closing with the specific story. Identified across ALL rounds of Topic 5.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Word Confusion</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">'Position' vs 'possessions', 'angers' vs 'encourages'. Common L1 interference patterns.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Tense Consistency</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Switches between past and present when telling stories. Needs to lock into past tense for narratives.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🟠</span>
-                <span class="weakness-name">Overthinking</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">More rounds ≠ better. Round 5 of Topic 5 scored lowest (6/15) due to over-explaining. Best speeches are shorter.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">No News Habit</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Improving — discussed Nvidia GTC and Oscars with Ann in Session 3. Nvidia was decent (prepped), Oscars was shaky (couldn't recall Michael B. Jordan's name). Prep = essential.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Hedging Language</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">'Probably' appeared 6+ times in Session 3. Still a default crutch. Need direct statements.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Parroting Facts</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Repeats phrases without understanding them. Caught himself on 'first chip since the startup' — learned to question facts before repeating.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Personal Examples Are The Unlock</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Session 3 proved it definitively: Photography story = clarity 4. Krithin video calls = clarity 3. Abstract leadership = clarity 2. ALWAYS prep a personal example for each topic.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Self Practice Transfers</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Topics drilled in self-practice before Ann session scored highest. Digital transformation and hobbies→careers were both practiced same day — both landed. Prep works.</div>
-        </div>
-        
+                    <div class="tl-takeaway">+7 (6 → 13, consistent at 13)</div>
                 </div>
             </div>
-
-            <!-- Score Timeline (full page) -->
-            <div class="page" id="timeline">
-                <div class="page-title">Score Timeline</div>
-                <div class="page-meta">Every round of every drill, color-coded by type</div>
-                
-    <svg viewBox="0 0 680 280" class="score-chart">
-        <circle cx="50" cy="15" r="5" fill="#8b5cf6"/><text x="60" y="19" fill="#9ca3af" font-size="11">Impromptu Speech</text>
-        <line x1="50" y1="230.0" x2="650" y2="230.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="234.0" fill="#525252" font-size="11" text-anchor="end">0</text>
-<line x1="50" y1="190.0" x2="650" y2="190.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="194.0" fill="#525252" font-size="11" text-anchor="end">3</text>
-<line x1="50" y1="150.0" x2="650" y2="150.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="154.0" fill="#525252" font-size="11" text-anchor="end">6</text>
-<line x1="50" y1="110.0" x2="650" y2="110.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="114.0" fill="#525252" font-size="11" text-anchor="end">9</text>
-<line x1="50" y1="70.0" x2="650" y2="70.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="74.0" fill="#525252" font-size="11" text-anchor="end">12</text>
-<line x1="50" y1="30.0" x2="650" y2="30.0" stroke="#2d2d2d" stroke-width="1"/>
-<text x="40" y="34.0" fill="#525252" font-size="11" text-anchor="end">15</text>
-
-        <line x1="320.0" y1="30" x2="320.0" y2="230" stroke="#3d3d3d" stroke-width="1" stroke-dasharray="3,3"/>
-
-        <path d="M 50.0 150.0 L 110.0 123.33333333333333 L 170.0 96.66666666666669 L 230.0 56.66666666666666 L 290.0 56.66666666666666 L 350.0 96.66666666666669 L 410.0 110.0 L 470.0 96.66666666666669 L 530.0 96.66666666666669 L 590.0 150.0 L 650.0 96.66666666666669" fill="none" stroke="#4b5563" stroke-width="1.5" opacity="0.5"/>
-        <line x1="50" y1="103.93939393939395" x2="650" y2="101.51515151515153" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
-        <text x="655" y="105.51515151515153" fill="#10b981" font-size="10" opacity="0.8">↑</text>
-        <circle cx="50.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 1\nScore: 6/15 (S:2 C:2 I:2)"/>
-<circle cx="110.0" cy="123.33333333333333" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 2\nScore: 8/15 (S:3 C:2 I:3)"/>
-<circle cx="170.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="230.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 4\nScore: 13/15 (S:5 C:4 I:4)"/>
-<circle cx="290.0" cy="56.66666666666666" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="The most important lesson of my life so  — Round 5\nScore: 13/15 (S:5 C:4 I:4)"/>
-<circle cx="350.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 1\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="410.0" cy="110.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 2\nScore: 9/15 (S:4 C:2 I:3)"/>
-<circle cx="470.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 3\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="530.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 4\nScore: 10/15 (S:4 C:3 I:3)"/>
-<circle cx="590.0" cy="150.0" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 5\nScore: 6/15 (S:2 C:2 I:2)"/>
-<circle cx="650.0" cy="96.66666666666669" r="5" fill="#8b5cf6" stroke="#191919" stroke-width="2" class="score-dot" data-tip="Real wealth is never measured in money o — Round 6\nScore: 10/15 (S:4 C:3 I:3)"/>
-
-        <text x="170.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">The most important lesson</text>
-<text x="530.0" y="270" fill="#6b7280" font-size="10" text-anchor="middle">Real wealth is never meas</text>
-
-    </svg>
-    
-            </div>
-
-            <!-- Weakness Tracker -->
-            <div class="page" id="weaknesses">
-                <div class="page-title">Weakness Tracker</div>
-                <div class="page-meta">Recurring patterns identified across drills</div>
-                <div class="weakness-grid">
+            
+            <div class="tl-row ">
+                <div class="tl-left">
+                    <div class="tl-date">Feb 27</div>
+                    <div class="tl-badge badge-self">Self-Practice</div>
+                </div>
+                <div class="tl-center">
+                    <div class="tl-dot "></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">Real wealth is never measured in money or possessions</span>
+                        <span class="tl-score score-ok">9.2<span class="tl-max">/15</span></span>
+                    </div>
+                    <div class="tl-type">Impromptu Speech</div>
                     
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🟡</span>
-                <span class="weakness-name">Connector Chains</span>
-                <span class="weakness-status status-improving">IMPROVING</span>
-            </div>
-            <div class="weakness-desc">So/and then — improving but still present. Best performance: 0 'so's in Topic 5 Round 6.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Generic Closings</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Consistently adds a greeting-card moral lesson at the end instead of closing with the specific story. Identified across ALL rounds of Topic 5.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Word Confusion</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">'Position' vs 'possessions', 'angers' vs 'encourages'. Common L1 interference patterns.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Tense Consistency</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Switches between past and present when telling stories. Needs to lock into past tense for narratives.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🟠</span>
-                <span class="weakness-name">Overthinking</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">More rounds ≠ better. Round 5 of Topic 5 scored lowest (6/15) due to over-explaining. Best speeches are shorter.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">No News Habit</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Improving — discussed Nvidia GTC and Oscars with Ann in Session 3. Nvidia was decent (prepped), Oscars was shaky (couldn't recall Michael B. Jordan's name). Prep = essential.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Hedging Language</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">'Probably' appeared 6+ times in Session 3. Still a default crutch. Need direct statements.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Parroting Facts</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Repeats phrases without understanding them. Caught himself on 'first chip since the startup' — learned to question facts before repeating.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Personal Examples Are The Unlock</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Session 3 proved it definitively: Photography story = clarity 4. Krithin video calls = clarity 3. Abstract leadership = clarity 2. ALWAYS prep a personal example for each topic.</div>
-        </div>
-        
-        <div class="weakness-card">
-            <div class="weakness-header">
-                <span class="weakness-icon">🔴</span>
-                <span class="weakness-name">Self Practice Transfers</span>
-                <span class="weakness-status status-active">ACTIVE</span>
-            </div>
-            <div class="weakness-desc">Topics drilled in self-practice before Ann session scored highest. Digital transformation and hobbies→careers were both practiced same day — both landed. Prep works.</div>
-        </div>
-        
-                </div>
-            </div>
-
-            <!-- Drill History -->
-            <div class="page" id="drills">
-                <div class="page-title">Drill History</div>
-                <div class="page-meta">Click to expand round-by-round details</div>
-                
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #8b5cf6;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">The most important lesson of my life so far</div>
-                    <div class="drill-meta">Impromptu Speech · 2026-02-27 · 5 rounds · PREP (Point, Reason, Example, Point)</div>
-                </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement">+7 (6 → 13, consistent at 13)</div>
-                <div class="drill-key-msg">💡 Happiness should come from within, not from depending on others</div>
-                <div class="drill-rounds">
                     
-                <div class="round-row">
-                    <span class="round-label">Round 1</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 40%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">6/15</span>
+                    <div class="tl-takeaway">Baseline 10, dipped to 6 (overthinking), recovered to 10</div>
                 </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 2</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 53%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">8/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 3</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">10/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 4</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 86%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">13/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 5</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 86%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">13/15</span>
-                </div>
-                
-                </div>
-                <div class="drill-corrections"><strong>Corrections Applied:</strong><ul><li>Stopped circular answers — picked one idea and stuck with it</li><li>Added specific personal story instead of generic statements</li><li>Reduced connector chains (so/and then) from 8+ to 1</li><li>Clean PREP structure by Round 4</li></ul></div>
-                <div class="drill-remaining"><strong>Still Working On:</strong> Closing still hedges — needs to end with conviction, not softening</div>
             </div>
-        </div>
-        
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #8b5cf6;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">Real wealth is never measured in money or possessions</div>
-                    <div class="drill-meta">Impromptu Speech · 2026-02-27 · 6 rounds · PREP (Point, Reason, Example, Point)</div>
+            
+            <div class="tl-row ">
+                <div class="tl-left">
+                    <div class="tl-date">Mar 09</div>
+                    <div class="tl-badge badge-self">Self-Practice</div>
                 </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement">Baseline 10, dipped to 6 (overthinking), recovered to 10</div>
-                <div class="drill-key-msg">💡 Real wealth is kindness — cricket story, brother who encouraged him</div>
-                <div class="drill-rounds">
+                <div class="tl-center">
+                    <div class="tl-dot "></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">Credit Cards</span>
+                        <span class="tl-score score-low">2.5<span class="tl-max">/5</span></span>
+                    </div>
+                    <div class="tl-type">Discussion Class</div>
+                    <div class="tl-activity"><span class="tl-act-topic">AI/ML Tokenization (Ram's choice — no news to disc</span><span class="tl-act-score score-low">1.7</span></div><div class="tl-activity"><span class="tl-act-topic">What is a credit card?</span><span class="tl-act-score score-low">2.3</span></div><div class="tl-activity"><span class="tl-act-topic">Debit card vs Credit card</span><span class="tl-act-score score-ok">3.0</span></div><div class="tl-activity"><span class="tl-act-topic">vocabulary_sentences</span><span class="tl-act-score score-ok">3.0</span></div><div class="tl-activity"><span class="tl-act-topic">Credit cards — definition, pros, cons, personal ex</span><span class="tl-act-score score-low">2.0</span></div><div class="tl-activity"><span class="tl-act-topic">idioms</span><span class="tl-act-score score-ok">3.0</span></div>
                     
-                <div class="round-row">
-                    <span class="round-label">Round 1</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">10/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 2</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 60%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">9/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 3</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">10/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 4</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">10/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 5</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 40%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">6/15</span>
-                </div>
-                
-                <div class="round-row">
-                    <span class="round-label">Round 6</span>
-                    <div class="round-bar-track">
-                        <div class="round-bar-fill" style="width: 66%; background: #8b5cf6;"></div>
-                    </div>
-                    <span class="round-score">10/15</span>
-                </div>
-                
-                </div>
-                <div class="drill-corrections"><strong>Corrections Applied:</strong><ul><li>Fixed 'angers' to 'encourages' (meaning-changing word error)</li><li>Added specific person and story (cricket brother)</li><li>Eliminated 'so' starters by Round 6 (zero in Round 6)</li><li>PREP structure consistent</li></ul></div>
-                <div class="drill-remaining"><strong>Still Working On:</strong><ul><li>Keeps adding generic moral lesson at the end instead of trusting the story to land</li><li>'Position' vs 'possessions' — corrected 4 times, not yet fixed</li><li>Past tense slips ('I love' instead of 'I loved', 'though I am' instead of 'though I was')</li><li>Overthinking leads to longer/weaker responses (Round 5 = 6/15)</li></ul></div>
-            </div>
-        </div>
-        
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #6b7280;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">Credit Cards</div>
-                    <div class="drill-meta">Discussion Class · 2026-03-09 · 0 rounds · </div>
-                </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement"></div>
-                <div class="drill-key-msg">💡 </div>
-                <div class="drill-rounds">
                     
                 </div>
-                
-                
             </div>
-        </div>
-        
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #6b7280;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">Nvidia GTC 2026 keynote — Blackwell, Groq 3 LPU, autonomous vehicles</div>
-                    <div class="drill-meta">News Discussion Drill · 2026-03-16 · 3 rounds · </div>
+            
+            <div class="tl-row ">
+                <div class="tl-left">
+                    <div class="tl-date">Mar 16</div>
+                    <div class="tl-badge badge-self">Self-Practice</div>
                 </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement">Structure improved across rounds. Core point first by Round 2. Still slipping on 'so' starters and sentence length.</div>
-                <div class="drill-key-msg">💡 </div>
-                <div class="drill-rounds">
+                <div class="tl-center">
+                    <div class="tl-dot "></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">Nvidia GTC 2026 keynote — Blackwell, Groq 3 LPU, autonomous </span>
+                        <span class="tl-score score-low">2.2<span class="tl-max">/5</span></span>
+                    </div>
+                    <div class="tl-type">News Discussion Drill</div>
                     
-                </div>
-                <div class="drill-corrections"><strong>Corrections Applied:</strong><ul><li>3-sentence structure: what happened / why it matters / what I think</li><li>Avoided dodging CEO name — say 'Jensen Huang' or 'Nvidia's CEO'</li><li>Caught circular repetition: said 'Nvidia is not just AI' twice in Round 3</li></ul></div>
-                <div class="drill-remaining"><strong>Still Working On:</strong><ul><li>'So' starters — appeared twice in Round 3 despite awareness</li><li>Grammar: 'they have been built' instead of 'they have built'</li><li>Garbled sentence: 'move the world very speed and quicker'</li><li>Circular repetition still present — same point twice in one response</li></ul></div>
-            </div>
-        </div>
-        
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #6b7280;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">The Monk Who Sold His Ferrari — 3-question teach-back</div>
-                    <div class="drill-meta">Teach Back · 2026-03-17 · 0 rounds · Teach-back (What is it / One lesson / Recommend?)</div>
-                </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement"></div>
-                <div class="drill-key-msg">💡 </div>
-                <div class="drill-rounds">
                     
+                    <div class="tl-takeaway">Structure improved across rounds. Core point first by Round 2. Still slipping on 'so' starters and sentence length.</div>
                 </div>
-                
-                
             </div>
-        </div>
-        
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #6b7280;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">Can hobbies become careers?</div>
-                    <div class="drill-meta">Jam Practice · 2026-03-17 · 2 rounds · JAM (Just A Minute)</div>
+            
+            <div class="tl-row ">
+                <div class="tl-left">
+                    <div class="tl-date">Mar 17</div>
+                    <div class="tl-badge badge-self">Self-Practice</div>
                 </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement">Round 2 scored lower — overthinking made sentences garbled. Simpler = better.</div>
-                <div class="drill-key-msg">💡 </div>
-                <div class="drill-rounds">
+                <div class="tl-center">
+                    <div class="tl-dot "></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">The Monk Who Sold His Ferrari — 3-question teach-back</span>
+                        <span class="tl-score score-low">2.7<span class="tl-max">/5</span></span>
+                    </div>
+                    <div class="tl-type">Teach Back</div>
                     
-                </div>
-                <div class="drill-corrections"><strong>Corrections Applied:</strong><ul><li>Round 1: 6 'so' starters flagged — worst count this session</li><li>Round 1: 'shoot my friends' — say 'photograph' outside photographer context</li><li>Round 2: 'come down into a serious career' — garbled phrasing from trying to sound impressive</li></ul></div>
-                <div class="drill-remaining"><strong>Still Working On:</strong><ul><li>'So' starters — 6 in round 1, still present in round 2</li><li>Overthinking leads to garbled sentences</li><li>Reaching for big words ('sheer intention', 'simple patterns') instead of plain language</li></ul></div>
-            </div>
-        </div>
-        
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #6b7280;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">How has the digital world changed the way we communicate?</div>
-                    <div class="drill-meta">Jam Practice · 2026-03-17 · 2 rounds · JAM (Just A Minute)</div>
-                </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement">Round 2 used a real example (parents' letters → Krithin video-calling grandparents). First time tonight a specific personal example landed.</div>
-                <div class="drill-key-msg">💡 </div>
-                <div class="drill-rounds">
                     
+                    <div class="tl-takeaway">State your point in the FIRST sentence. Everything after is support.</div>
                 </div>
-                <div class="drill-corrections"><strong>Corrections Applied:</strong><ul><li>Round 1: Talked about data speed instead of communication — off-topic</li><li>Round 2: Bookended with same generic sentence ('changed a lot' open and close)</li><li>Round 2: 'Present kids era' → 'my kids generation'</li></ul></div>
-                <div class="drill-remaining"><strong>Still Working On:</strong><ul><li>'So' starters — 3 per round average</li><li>'And then' chains — 3 in round 2</li><li>Opens and closes with same generic statement instead of trusting the example</li></ul></div>
             </div>
-        </div>
-        
-        <div class="drill-item" onclick="this.classList.toggle('expanded')">
-            <div class="drill-header">
-                <div class="drill-color" style="background: #6b7280;"></div>
-                <div class="drill-info">
-                    <div class="drill-topic">Leadership, Workplace Wellness, Digital Transformation, Clubs &amp; Activities, Business English Vocabulary</div>
-                    <div class="drill-meta">Session With Ann · 2026-03-17 · 0 rounds · </div>
+            
+            <div class="tl-row ">
+                <div class="tl-left">
+                    <div class="tl-date">Mar 17</div>
+                    <div class="tl-badge badge-self">Self-Practice</div>
                 </div>
-                <div class="drill-chevron">▾</div>
-            </div>
-            <div class="drill-details">
-                <div class="drill-improvement"></div>
-                <div class="drill-key-msg">💡 </div>
-                <div class="drill-rounds">
+                <div class="tl-center">
+                    <div class="tl-dot "></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">Can hobbies become careers?</span>
+                        <span class="tl-score score-low">2.0<span class="tl-max">/5</span></span>
+                    </div>
+                    <div class="tl-type">Jam Practice</div>
                     
+                    
+                    <div class="tl-takeaway">Stop trying to sound impressive. Simple words, real story, done.</div>
                 </div>
-                
-                
+            </div>
+            
+            <div class="tl-row ">
+                <div class="tl-left">
+                    <div class="tl-date">Mar 17</div>
+                    <div class="tl-badge badge-self">Self-Practice</div>
+                </div>
+                <div class="tl-center">
+                    <div class="tl-dot "></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">How has the digital world changed the way we communicate?</span>
+                        <span class="tl-score score-low">2.3<span class="tl-max">/5</span></span>
+                    </div>
+                    <div class="tl-type">Jam Practice</div>
+                    
+                    
+                    <div class="tl-takeaway">Specific personal examples are the unlock. Abstract statements ('changed a lot') add nothing.</div>
+                </div>
+            </div>
+            
+            <div class="tl-row tl-ann">
+                <div class="tl-left">
+                    <div class="tl-date">Mar 17</div>
+                    <div class="tl-badge badge-ann">With Ann</div>
+                </div>
+                <div class="tl-center">
+                    <div class="tl-dot tl-dot-ann"></div>
+                    <div class="tl-line"></div>
+                </div>
+                <div class="tl-right">
+                    <div class="tl-header">
+                        <span class="tl-topic">Leadership, Workplace Wellness, Digital Transformation, Club</span>
+                        <span class="tl-score score-low">2.4<span class="tl-max">/5</span></span>
+                    </div>
+                    <div class="tl-type">Session With Ann</div>
+                    <div class="tl-activity"><span class="tl-act-topic">Nvidia GTC keynote + Oscars</span><span class="tl-act-score score-low">2.3</span></div><div class="tl-activity"><span class="tl-act-topic">Leadership — what is it, why important, example</span><span class="tl-act-score score-low">1.7</span></div><div class="tl-activity"><span class="tl-act-topic">Workplace wellness</span><span class="tl-act-score score-low">2.0</span></div><div class="tl-activity"><span class="tl-act-topic">Digital transformation</span><span class="tl-act-score score-ok">3.0</span></div><div class="tl-activity"><span class="tl-act-topic">vocabulary_sentences</span><span class="tl-act-score score-low">2.3</span></div>
+                    <div class="tl-best">Digital transformation: parents' letters → Krithin video calls (clarity 3)</div>
+                    <div class="tl-takeaway">When Ram has a REAL personal story (photography, Krithin), he scores 3-4. When he speaks abstractly (leadership, workplace wellness), he scores 1-2. The unlock is always a specific example.</div>
+                </div>
+            </div>
             </div>
         </div>
-        
-            </div>
 
-            <!-- Curriculum -->
-            <div class="page" id="curriculum">
-                <div class="page-title">Frantically Speaking</div>
-                <div class="page-meta">25-session 1:1 program with Coach Ann</div>
-                
-    <div class="fs-progress">
-        <div class="fs-bar-container">
-            <div class="fs-bar-fill" style="width: 12%;"></div>
+        <div class="section">
+            <div class="section-title">Patterns &amp; Weaknesses</div>
+            <div class="w-group"><div class="w-group-title">Fix These</div><div class="w-card w-active"><div class="w-name">Generic Closings</div><div class="w-desc">Consistently adds a greeting-card moral lesson at the end instead of closing with the specific story. Identified across ALL rounds of Topic 5.</div></div><div class="w-card w-active"><div class="w-name">Word Confusion</div><div class="w-desc">'Position' vs 'possessions', 'angers' vs 'encourages'. Common L1 interference patterns.</div></div><div class="w-card w-active"><div class="w-name">Tense Consistency</div><div class="w-desc">Switches between past and present when telling stories. Needs to lock into past tense for narratives.</div></div><div class="w-card w-active"><div class="w-name">Hedging Language</div><div class="w-desc">'Probably' appeared 6+ times in Session 3. Still a default crutch. Need direct statements.</div></div></div><div class="w-group"><div class="w-group-title">Improving</div><div class="w-card w-improving"><div class="w-name">Connector Chains</div><div class="w-desc">So/and then — improving but still present. Best performance: 0 'so's in Topic 5 Round 6.</div></div><div class="w-card w-improving"><div class="w-name">No News Habit</div><div class="w-desc">Improving — discussed Nvidia GTC and Oscars with Ann in Session 3. Nvidia was decent (prepped), Oscars was shaky (couldn't recall Michael B. Jordan's name). Prep = essential.</div></div></div><div class="w-group"><div class="w-group-title">Insights</div><div class="w-card w-insight"><div class="w-name">Overthinking</div><div class="w-desc">More rounds ≠ better. Round 5 of Topic 5 scored lowest (6/15) due to over-explaining. Best speeches are shorter.</div></div><div class="w-card w-insight"><div class="w-name">Parroting Facts</div><div class="w-desc">Repeats phrases without understanding them. Caught himself on 'first chip since the startup' — learned to question facts before repeating.</div></div><div class="w-card w-insight"><div class="w-name">Personal Examples Are The Unlock</div><div class="w-desc">Session 3 proved it definitively: Photography story = clarity 4. Krithin video calls = clarity 3. Abstract leadership = clarity 2. ALWAYS prep a personal example for each topic.</div></div><div class="w-card w-insight"><div class="w-name">Self Practice Transfers</div><div class="w-desc">Topics drilled in self-practice before Ann session scored highest. Digital transformation and hobbies→careers were both practiced same day — both landed. Prep works.</div></div></div>
         </div>
-        <div class="fs-bar-label">3 / 25 sessions completed (12%)</div>
+
+        <div class="section">
+            <div class="section-title">Session Log</div>
+            
+        <div class="sess-row sess-done">
+            <div class="sess-num">1</div>
+            <div class="sess-info">
+                <div class="sess-date">Feb 23</div>
+                <div class="sess-type">Verbal Communication</div>
+            </div>
+            <div class="sess-score">10/15</div>
+        </div>
+        
+        <div class="sess-row sess-done">
+            <div class="sess-num">2</div>
+            <div class="sess-info">
+                <div class="sess-date">Mar 9</div>
+                <div class="sess-type">Discussion Class</div>
+            </div>
+            <div class="sess-score">2.5/5</div>
+        </div>
+        
+        <div class="sess-row sess-done">
+            <div class="sess-num">3</div>
+            <div class="sess-info">
+                <div class="sess-date">Mar 17 (Mon)</div>
+                <div class="sess-type">JAM + Discussion + Vocab</div>
+            </div>
+            <div class="sess-score">2.4/5</div>
+        </div>
+        
+        </div>
+
     </div>
-    <div class="module-grid">
-        
-        <div class="module-card">
-            <div class="module-header">
-                <span class="module-num">Module 1</span>
-                <span class="module-badge drillable">AI + Coach</span>
-            </div>
-            <div class="module-title">Confident Communication &amp; Habit Formation</div>
-            <ul class="module-items"><li>3 C's of public speaking: Confidence, Clarity, Conciseness</li><li>Communication skills myths &amp; mistakes</li><li>Structuring content to express thoughts in the most effective way</li><li>Getting rid of umm's and ahh's (and other filler words)</li><li>Habit Formation — Applying techniques from Atomic Habits</li></ul>
-        </div>
-        
-        <div class="module-card">
-            <div class="module-header">
-                <span class="module-num">Module 2</span>
-                <span class="module-badge drillable">AI + Coach</span>
-            </div>
-            <div class="module-title">Grammar — Language Learning &amp; Acquisition</div>
-            <ul class="module-items"><li>Understanding grammar sequence</li><li>Getting rid of common grammatical sins</li><li>Parts of speech</li><li>Sentence formation</li><li>Daily mini-tasks for acquiring and learning grammar usage</li></ul>
-        </div>
-        
-        <div class="module-card">
-            <div class="module-header">
-                <span class="module-num">Module 3</span>
-                <span class="module-badge drillable">AI + Coach</span>
-            </div>
-            <div class="module-title">Vocabulary &amp; Business English</div>
-            <ul class="module-items"><li>Expanding current vocabulary</li><li>Active and Passive Voice</li><li>Power Words and Positive Phrasing</li><li>Business words, phrases, and idioms</li><li>Business Tenses</li></ul>
-        </div>
-        
-        <div class="module-card">
-            <div class="module-header">
-                <span class="module-num">Module 4</span>
-                <span class="module-badge coach-only">Coach Only</span>
-            </div>
-            <div class="module-title">Body Language &amp; Listening Skills</div>
-            <ul class="module-items"><li>Power poses to look more commanding while speaking</li><li>Functional gesturing — how to use your hands correctly while speaking</li><li>Understanding the power &amp; use of facial expressions</li><li>Understanding Active and Deep Listening</li></ul>
-        </div>
-        
-        <div class="module-card">
-            <div class="module-header">
-                <span class="module-num">Module 5</span>
-                <span class="module-badge coach-only">Coach Only</span>
-            </div>
-            <div class="module-title">Pronunciation &amp; Accent Neutralization</div>
-            <ul class="module-items"><li>Syllable Stress and Word Stress</li><li>Understanding 44 Phonemes</li><li>Noun and Verb Stress</li><li>Getting rid of accent flaws</li><li>Neutralize your accent to sound more polished</li><li>URL: https://edition.cnn.com/audio</li><li>Listen to CNN audio daily for at least 15 minutes</li><li>Focus on how anchors structure sentences, transitions, and vocabulary</li><li>URL: https://www.oxfordonlineenglish.com/english-level-test</li><li>Take all tests:</li><li>Record scores in `progress/weekly_summary.md`</li><li>Topic 1: &quot;Will Artificial Intelligence replace most human jobs?&quot;</li><li>Topic 2: &quot;The impact of social media on mental health&quot;</li><li>Practice structuring 2-minute responses for each</li><li>Ann sent 2 topics — record structured speeches (intro → body → conclusion)</li><li>Follow the model speech format shown in class</li><li>PDF in `progress/Session Outline (Folder)/2nd Session (Non-Verbal Communication)/`</li><li>60% Kids Stories (read aloud to Krithin → retell in 3 sentences):</li><li>40% AI/Tech Articles (Edge Reader Mode — F9):</li><li>Be ready to retell 1 story + explain 1 article each session</li><li>Non-negotiable — Ann stressed reading daily multiple times</li><li>Edge Reader Mode: F9 on any article = clean text, no distractions</li></ul>
-        </div>
-        
-    </div>
-    
-                
-    <div class="oxford-section">
-        <h3>Oxford Baseline Assessment</h3>
-        <table class="oxford-table">
-            <thead><tr><th>Test</th><th>Score</th><th>%</th><th>CEFR</th></tr></thead>
-            <tbody>
-        <tr>
-            <td>Listening</td>
-            <td>18/24</td>
-            <td>75%</td>
-            <td><span class="cefr-badge">B1 (Intermediate)</span></td>
-        </tr>
-        
-        <tr>
-            <td>Vocabulary</td>
-            <td>24/40</td>
-            <td>60%</td>
-            <td><span class="cefr-badge">B1 (Intermediate)</span></td>
-        </tr>
-        
-        <tr>
-            <td>Grammar</td>
-            <td>31/40</td>
-            <td>77.5%</td>
-            <td><span class="cefr-badge">B1 (Intermediate)</span></td>
-        </tr>
-        </tbody>
-        </table>
-    </div>
-    
-            </div>
-
-            <!-- Weekly Summary -->
-            <div class="page" id="weekly">
-                <div class="page-title">Weekly Summary</div>
-                <div class="page-meta">Updated every Sunday during weekly review</div>
-                <p class="weekly-text">Track weekly progress here. Updated every Sunday during weekly session.</p><p class="weekly-text">---</p><h3 class="weekly-heading">Baseline Assessment — Feb 22, 2026 (Oxford Online English)</h3><div class="weekly-table-row">Test · Score · Percentage · CEFR Level</div><p class="weekly-text">|------|-------|-----------|------------|</p><div class="weekly-table-row">Listening · 18/24 · 75% · B1 (Intermediate)</div><div class="weekly-table-row">Vocabulary · 24/40 · 60% · B1 (Intermediate)</div><div class="weekly-table-row">Grammar · 31/40 · 77.5% · B1 (Intermediate)</div><div class="weekly-table-row">Reading · — · — · Not taken yet</div><p class="weekly-text">**Summary:** Solid B1 across the board. Listening &gt; Vocabulary. Goal is to reach B2 (Upper Intermediate) by end of Frantically Speaking program.</p><p class="weekly-text">---</p><h3 class="weekly-heading">Week 1 (Feb 22–28, 2026)</h3><div class="weekly-item"><strong>Session:</strong> 1 — Verbal Communication (homework practice with Claude)</div><div class="weekly-item"><strong>Drills completed:</strong> 2 impromptu speeches (5 + 6 rounds)</div><div class="weekly-item"><strong>Average score:</strong> 10/15 (structure/clarity/impact)</div><div class="weekly-item"><strong>Focus area:</strong> PREP framework, connector chains</div><div class="weekly-item"><strong>Top weakness:</strong> Circular answers, connector chains (&quot;so/and then&quot;), generic closings</div><div class="weekly-item"><strong>Improvement:</strong> Went from 6/15 to 13/15 within one drill session</div><div class="weekly-item"><strong>Key win:</strong> Honest scoring policy established — no kindness inflation</div><p class="weekly-text">---</p><h3 class="weekly-heading">Week 2 (Mar 3–9, 2026)</h3><div class="weekly-item"><strong>Session:</strong> 2 — Discussion Class (Credit Cards)</div><div class="weekly-item"><strong>Drills completed:</strong> 1 session (7 activities: free speaking, definition, distinction, vocabulary, structured speech, idioms, model reading)</div><div class="weekly-item"><strong>Average score:</strong> 2.5/5</div><div class="weekly-item"><strong>Focus area:</strong> Structured speech, vocabulary, idioms</div><div class="weekly-item"><strong>Top weakness:</strong> No news reading habit (blocked free speaking exercise), connector chains still heavy, circular repetition</div><div class="weekly-item"><strong>Improvement from Week 1:</strong> Used personal examples (10 credit cards story), attempted structure without prompting</div><div class="weekly-item"><strong>New weaknesses identified:</strong> Hedging language (&quot;probably&quot;, &quot;kind of&quot;), subject-verb agreement (&quot;people does&quot;), word confusion (&quot;vicious slope&quot;)</div><div class="weekly-item"><strong>Homework:</strong> 2 video speeches, read The Monk Who Sold His Ferrari, 2 news articles daily</div><div class="weekly-item"><strong>Next session:</strong> Tuesday Mar 10, 8 AM IST</div><div class="weekly-item"><strong>Next week focus:</strong> News reading habit, eliminating hedging words, proper intro/body/conclusion structure</div><p class="weekly-text">---</p><h3 class="weekly-heading">Week 3 (Mar 10–16, 2026)</h3><div class="weekly-item"><strong>Session:</strong> 3 — JAM (Just A Minute) — scheduled Monday Mar 16</div><div class="weekly-item"><strong>Drills completed:</strong> Reading plan established (60% kids stories / 40% news+AI articles)</div><div class="weekly-item"><strong>New daily habit:</strong> 1 kids story (Krithin bedtime) + 1 news/AI article (Edge Immersive Reader)</div><div class="weekly-item"><strong>Reading sources set up:</strong> Katha Kids, Storyberries, NPR, TLDR AI, The Batch</div><div class="weekly-item"><strong>Session 3 prep:</strong> JAM rules (no hesitation/repetition/deviation), Clubs &amp; Activities discussion, Business English vocabulary (collaboration, leadership, dedication, confidence, creativity, volunteering)</div><div class="weekly-item"><strong>Key decision:</strong> Stories serve double duty — Krithin gets story time, Ram gets speaking practice</div><div class="weekly-item"><strong>Teacher name correction:</strong> Ann (was incorrectly referred to as Chaitu in earlier notes)</div><div class="weekly-item"><strong>Edge Immersive Reader:</strong> F9 doesn't work on Mac — use book icon or right-click → &quot;Open in Immersive Reader&quot;</div><div class="weekly-item"><strong>Next session:</strong> Monday Mar 16 with Ann (Session 3 — JAM)</div><div class="weekly-item"><strong>Homework completed (Mar 16):</strong> </div><p class="weekly-text">- [x] 2 video speeches sent to Ann</p><p class="weekly-text">- [x] Read The Monk Who Sold His Ferrari</p><p class="weekly-text">- [x] Nvidia GTC news drill — 3 rounds, improved from 2/5 to 3/5</p><p class="weekly-text">- [x] Started vocabulary journal (`progress/vocabulary_journal.md`) — first word: &quot;ecstatic&quot;</p><p class="weekly-text">- [ ] Daily reading habit (kids stories + news) — in progress</p><p class="weekly-text">- [ ] Subscribe to TLDR AI + The Batch</p><p class="weekly-text">- [ ] Install Khan Academy Kids for Krithin</p><div class="weekly-item"><strong>New learned pattern:</strong> Question facts before repeating them (`~/.claude/learned/question-facts-before-repeating.md`)</div><div class="weekly-item"><strong>Self-practice drills (Mar 17 — Session 3 day):</strong> </div><p class="weekly-text">- Teach-back: &quot;The Monk Who Sold His Ferrari&quot; — avg 2.7/5. Buried point in 2/3 answers, circular repetition.</p><p class="weekly-text">- JAM #1: &quot;Can hobbies become careers?&quot; — R1: 2.3, R2: 1.7. 6 &quot;so&quot; starters in R1 (worst count). Overthinking = garbled.</p><p class="weekly-text">- JAM #2: &quot;How has the digital world changed communication?&quot; — R1: 2.0, R2: 2.7. Personal example landed (Krithin video-calling grandparents).</p><div class="weekly-item"><strong>Key insight (Mar 17):</strong> Specific personal examples are the unlock. Abstract statements add nothing. Simple words &gt; trying to sound impressive.</div><div class="weekly-item"><strong>Session 3 with Ann (Mar 17) — FULL TRANSCRIPT LOGGED:</strong> </div><div class="weekly-item"><strong>News:</strong> Nvidia GTC (decent, prepped) + Oscars (shaky, couldn't recall Michael B. Jordan)</div><div class="weekly-item"><strong>JAM topics:</strong> Leadership (2/5 — extremely circular), Workplace Wellness (2/5 — generic), Digital Transformation (3/5 — Krithin example landed)</div><div class="weekly-item"><strong>Discussion:</strong> Clubs &amp; Activities — 5 questions. Best answer: Photography → Rsquare Photography (4/5)</div><div class="weekly-item"><strong>Vocab sentences:</strong> collaboration, leadership, dedication, confidence, creativity, volunteering (3/5 grammar, wordy)</div><div class="weekly-item"><strong>Session avg:</strong> 2.4/5</div><div class="weekly-item"><strong>Proven pattern:</strong> Self-practice topics scored highest. Digital transformation + hobbies→careers were both drilled same day before Ann session.</div><div class="weekly-item">**Ann had to redirect repeatedly** — &quot;be more specific&quot;, &quot;give me an example&quot;, &quot;now conclude it&quot;</div><div class="weekly-item">**40+ &quot;so&quot; starters** across the session (worst count yet in a live session)</div>
-            </div>
-
-        </div>
-    </div>
-
-    <script>
-        function showSection(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-            const page = document.getElementById(id);
-            if (page) page.classList.add('active');
-            const link = document.querySelector(`[onclick*="'${id}'"]`);
-            if (link) link.classList.add('active');
-            // Mobile buttons
-            document.querySelectorAll('.mobile-nav button').forEach(b => b.classList.remove('active'));
-            const mBtn = document.querySelector(`.mobile-nav button[onclick*="'${id}'"]`);
-            if (mBtn) mBtn.classList.add('active');
-        }
-
-        function scrollToDrill(i) {
-            setTimeout(() => {
-                const items = document.querySelectorAll('.drill-item');
-                if (items[i]) {
-                    items[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    items[i].classList.add('expanded');
-                }
-            }, 100);
-        }
-
-        // Tooltip for score dots
-        const tooltip = document.getElementById('tooltip');
-        document.querySelectorAll('.score-dot').forEach(dot => {
-            dot.addEventListener('mouseenter', e => {
-                tooltip.textContent = dot.getAttribute('data-tip').replace(/\\n/g, '\n');
-                tooltip.style.display = 'block';
-                tooltip.style.left = e.clientX + 12 + 'px';
-                tooltip.style.top = e.clientY - 10 + 'px';
-            });
-            dot.addEventListener('mouseleave', () => {
-                tooltip.style.display = 'none';
-            });
-            dot.addEventListener('mousemove', e => {
-                tooltip.style.left = e.clientX + 12 + 'px';
-                tooltip.style.top = e.clientY - 10 + 'px';
-            });
-        });
-    </script>
 </body>
 </html>
