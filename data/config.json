@@ -1,0 +1,22 @@
+{
+  "current_focus": "Use specific personal examples and reduce article mistakes",
+  "next_session": {
+    "number": 4,
+    "date": "Friday Mar 21, 9:30 PM",
+    "prep": [
+      "Record video: Hybrid company culture (Wed)",
+      "Record video: AI in daily workflows (Thu)",
+      "Record video: Burnout and wellness (Fri AM)",
+      "Prepare personal example for each topic",
+      "Read one article and summarize in 3 sentences"
+    ]
+  },
+  "repeating_mistakes": [
+    "articles — most of the people → most people",
+    "so starters — 40+ in session 3",
+    "circular repetition — same point 3+ ways",
+    "hedging — probably, kind of, something like",
+    "word choice — vicious slope → slippery slope"
+  ],
+  "last_updated": "2026-03-18"
+}

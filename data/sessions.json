@@ -1,0 +1,29 @@
+[
+  {
+    "session": 1,
+    "date": "2026-02-27",
+    "score": 2.0,
+    "focus": "basic fluency",
+    "main_issues": ["word choice", "connector chains", "circular answers"],
+    "takeaway": "PREP framework works. Honest scoring matters more than encouragement.",
+    "next_action": "Practice impromptu speeches with one clear point per response."
+  },
+  {
+    "session": 2,
+    "date": "2026-03-09",
+    "score": 2.5,
+    "focus": "sentence structure",
+    "main_issues": ["articles", "circular repetition", "hedging language", "no news habit"],
+    "takeaway": "Need intro/body/conclusion structure. Personal examples (10 credit cards) worked better than abstract statements.",
+    "next_action": "Read news daily. Record 2 video speeches. Read The Monk Who Sold His Ferrari."
+  },
+  {
+    "session": 3,
+    "date": "2026-03-17",
+    "score": 2.4,
+    "focus": "personal examples over abstract speaking",
+    "main_issues": ["so starters", "articles", "hedging", "circular repetition"],
+    "takeaway": "Personal examples scored 4/5 (photography story). Abstract topics scored 2/5 (leadership). Self-practice before class transfers directly.",
+    "next_action": "Prepare 3 personal examples for video homework. Read daily."
+  }
+]
