@@ -1,13 +1,14 @@
 {
-  "current_focus": "Use specific personal examples and reduce article mistakes",
+  "current_focus": "OPSC structure (Open-Problem-Solution-Close) + personal examples + delivery fixes",
   "next_session": {
     "number": 4,
-    "date": "Friday Mar 21, 9:30 PM",
+    "date": "Monday Mar 24, 9:30 PM",
     "prep": [
-      "Record video: Hybrid company culture (Wed)",
-      "Record video: AI in daily workflows (Thu)",
-      "Record video: Burnout and wellness (Fri AM)",
-      "Prepare personal example for each topic",
+      "Record video: Hybrid company culture (Sat Mar 22) — drilled, ready",
+      "Drill + record video: AI in daily workflows (Sun Mar 23) — drilled, ready",
+      "Drill + record video: Burnout and wellness (Mon Mar 24 AM) — not drilled yet",
+      "Discuss live: Psychological safety (no video)",
+      "Use OPSC 4-beat structure for all videos",
       "Read one article and summarize in 3 sentences"
     ]
   },
@@ -18,5 +19,5 @@
     "hedging — probably, kind of, something like",
     "word choice — vicious slope → slippery slope"
   ],
-  "last_updated": "2026-03-18"
+  "last_updated": "2026-03-22"
 }
