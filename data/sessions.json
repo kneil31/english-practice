@@ -25,5 +25,23 @@
     "main_issues": ["so starters", "articles", "hedging", "circular repetition"],
     "takeaway": "Personal examples scored 4/5 (photography story). Abstract topics scored 2/5 (leadership). Self-practice before class transfers directly.",
     "next_action": "Prepare 3 personal examples for video homework. Read daily."
+  },
+  {
+    "session": 4,
+    "date": "2026-03-24",
+    "score": 2.9,
+    "focus": "delivery — pitch, pace, volume, pauses, body language",
+    "main_issues": ["flat pitch", "pace sags mid-answer", "volume drops at end", "no pauses", "no smile", "eyes down"],
+    "takeaway": "Ann's feedback shifted to delivery: smile + volume + pause first, then pitch + pace + gestures. OPSC 4-beat structure (Open-Problem-Solution-Close) for speeches. Camera checklist created.",
+    "next_action": "Fix smile + volume + pause in videos. Camera checklist next to camera. Read daily."
+  },
+  {
+    "session": 5,
+    "date": "2026-03-25",
+    "score": 2.3,
+    "focus": "discussion fluency — success, teamwork, recognition",
+    "main_issues": ["recognization (recognition)", "circular repetition", "can't define own concepts", "no news article", "heavy so/and then"],
+    "takeaway": "Photography story and Bill Gates/Elon Musk scored highest (clarity 3). Introduced 'smart work' but couldn't define it when pushed. Still no news reading habit. Ann's technique: read CNN aloud for 2 years → muscle memory.",
+    "next_action": "Read news LOUDLY daily. Record 1 video. Fix 'recognition' pronunciation. Use ChatGPT for vocab props before topics."
   }
 ]
