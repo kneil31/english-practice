@@ -1,30 +1,41 @@
 {
-  "current_focus": "Read news LOUDLY daily + use connectors (therefore, nevertheless, however) + stop introducing concepts you can't define",
+  "current_focus": "Read news LOUDLY daily + be detail-oriented when explaining + fix pronunciation (LEISURE, NURTURE, MUSCLE, RECOGNITION, LEAVING)",
   "next_session": {
-    "number": 6,
-    "date": "Next Tuesday (same time) — last discussion before techniques",
+    "number": 7,
+    "date": "Next Tuesday — technique training begins (1 hour)",
     "prep": [
-      "Record 1 video — topic TBD",
-      "Read 1 NEWS article — be ready to explain in 3 sentences",
-      "Read news LOUDLY daily (Ann's technique: CNN aloud for 2 years → muscle memory)",
-      "Fix word: RECOGNITION not 'recognization' — say it 10x",
-      "Use ChatGPT for vocabulary props on discussion topic",
-      "Daily videos starting next week (Ann increasing homework)"
+      "Read news LOUDLY daily — Ann's #1 prescription (said it twice)",
+      "Be more detail-oriented when explaining — Ann's specific feedback",
+      "Fix pronunciation: LEISURE (LEE-zhur), NURTURE, MUSCLE",
+      "Fix word: RECOGNITION not 'recognization'",
+      "Fix word: LEAVING not 'living' (leaving on the table)",
+      "No homework from Ann this week (she's on leave Sat-Sun)",
+      "NY trip Apr 8 (Krithin birthday) — check if session timing affected"
     ]
   },
   "upcoming_schedule": [
-    "Session 6: Last discussion class",
-    "Session 7-8: Technique classes (STAR method, KC method)",
-    "Session 9: Grammar session"
+    "Session 7: Technique training begins (STAR method, KC method) — 1 hour",
+    "Sessions now once/week, 1 hour each",
+    "Then: Grammar session",
+    "Then: Next module"
   ],
   "repeating_mistakes": [
-    "recognization → RECOGNITION (said 4+ times in Session 5)",
-    "so starters — still in every answer",
-    "circular repetition — success definition said 3 ways",
-    "hedging — probably, maybe, kind of",
-    "can't define own concepts — 'smart work' introduced then couldn't explain",
-    "no news habit — Session 5: talked about journaling instead of news",
-    "word errors — cheat quotes (codes), lying behind (lagging), out of track (off track)"
+    "so starters — 50+ in Session 6, still #1 problem",
+    "probably — 15+ per session, used as verbal pause",
+    "and then chains — replacement filler for 'so'",
+    "circular repetition — same idea multiple ways instead of moving forward",
+    "leisure → mispronounced as 'laser/leaser' entire Session 6",
+    "naturate → NURTURE",
+    "jailbrocket → JAILBROKE",
+    "muzzle → MUSCLE",
+    "recognization → RECOGNITION (from Session 5, still not fixed)",
+    "living on the table → LEAVING on the table (corrected 2x, still wrong)",
+    "subject switching — we/you/they/I in same answer"
   ],
-  "last_updated": "2026-03-25"
+  "session_6_improvements": [
+    "Hand gestures — confirmed improved by Ann",
+    "Framing — confirmed improved by Ann",
+    "Ann says 'on track' — discussion phase complete, ready for techniques"
+  ],
+  "last_updated": "2026-03-31"
 }
